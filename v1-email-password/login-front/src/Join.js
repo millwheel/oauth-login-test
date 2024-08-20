@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 
-function Join({ setIsAuthenticated }) {
+function Join() {
   const [email, setEmail] = useState("");
   const [name, setName] = useState("");
   const [password, setPassword] = useState("");
@@ -25,8 +25,7 @@ function Join({ setIsAuthenticated }) {
       });
 
       console.log("Signup successful:", response.data);
-      setIsLoggedIn(true); // Set login state to true after successful signup
-      navigate("/"); // Redirect to home page after signup
+      navigate("/");
     } catch (error) {
       setError("Sign-up failed");
       console.error(error.response?.data || error.message);
@@ -42,24 +41,28 @@ function Join({ setIsAuthenticated }) {
           <input
             type="email"
             placeholder="Email"
+            value={email}
             onChange={(e) => setEmail(e.target.value)}
             required
           />
           <input
             type="text"
             placeholder="Name"
+            value={name}
             onChange={(e) => setName(e.target.value)}
             required
           />
           <input
             type="password"
             placeholder="Password"
+            value={password}
             onChange={(e) => setPassword(e.target.value)}
             required
           />
           <input
             type="password"
             placeholder="Password Confirm"
+            value={passwordConfirm}
             onChange={(e) => setPasswordConfirm(e.target.value)}
             required
           />

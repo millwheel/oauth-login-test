@@ -9,17 +9,17 @@ function Home({ isAuthenticated }) {
         <div>
           {isAuthenticated ? (
             <>
+              <Link to={"/logout"}>
+                <button className={"login_button"}>Logout</button>
+              </Link>
+            </>
+          ) : (
+            <>
               <Link to={"/login"}>
                 <button className={"login_button"}> login </button>
               </Link>
               <Link to={"/join"}>
                 <button className={"join_button"}> join </button>
-              </Link>
-            </>
-          ) : (
-            <>
-              <Link to={"/logout"}>
-                <button className={"login_button"}>Logout</button>
               </Link>
             </>
           )}

@@ -1,13 +1,54 @@
-import React from "react";
+import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import axios from "axios";
 
 function Login({ setIsAuthenticated }) {
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [error, setError] = useState("");
+  const navigate = useNavigate();
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    try {
+      const response = await axios.post("http://localhost:8080/login", {
+        email,
+        password,
+      });
+
+      console.log("Login successful:", response.data);
+      setIsAuthenticated(true);
+      navigate("/");
+    } catch (error) {
+      setError("Invalid login credentials");
+      console.error(error.response?.data || error.message);
+    }
+  };
+
   return (
     <div className="frame">
       <div className="container">
         <h1>Login format</h1>
-        <input type="email" placeholder="Email" />
-        <input type="password" placeholder="Password" />
-        <button className="submit_button">Submit</button>
+        {error && <p style={{ color: "red" }}>{error}</p>}
+        <form onSubmit={handleSubmit}>
+          <input
+            type="email"
+            placeholder="Email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            required
+          />
+          <input
+            type="password"
+            placeholder="Password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            required
+          />
+          <button className="submit_button" type="submit">
+            Submit
+          </button>
+        </form>
       </div>
     </div>
   );

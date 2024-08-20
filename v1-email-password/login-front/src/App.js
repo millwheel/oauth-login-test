@@ -19,12 +19,9 @@ function App() {
           />
           <Route
             path="/login"
-            element={<Login isAuthenticated={isAuthenticated} />}
+            element={<Login setIsAuthenticated={setIsAuthenticated} />}
           />
-          <Route
-            path="/join"
-            element={<Join isAuthenticated={isAuthenticated} />}
-          />
+          <Route path="/join" element={<Join />} />
           <Route
             path="/logout"
             element={<Logout setIsAuthenticated={setIsAuthenticated} />}
