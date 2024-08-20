@@ -1,4 +1,3 @@
-import Button from "./component/Button";
 import React from "react";
 import { Link } from "react-router-dom";
 
@@ -9,10 +8,10 @@ function Login() {
         <h2 className="intro">Login Test App</h2>
         <div>
           <Link to={"/login"}>
-            <Button text={"login"} className={"login_button"}></Button>
+            <button className={"login_button"}> login </button>
           </Link>
           <Link to={"/join"}>
-            <Button text={"join"} className={"join_button"}></Button>
+            <button className={"join_button"}> join </button>
           </Link>
         </div>
       </div>
