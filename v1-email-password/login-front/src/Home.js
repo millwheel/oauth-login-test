@@ -1,5 +1,6 @@
 import Button from "./component/Button";
 import React from "react";
+import { Link } from "react-router-dom";
 
 function Login() {
   return (
@@ -7,8 +8,12 @@ function Login() {
       <div className="header">
         <h2 className="intro">Login Test App</h2>
         <div>
-          <Button text={"login"} className={"login_button"}></Button>
-          <Button text={"join"} className={"join_button"}></Button>
+          <Link to={"/login"}>
+            <Button text={"login"} className={"login_button"}></Button>
+          </Link>
+          <Link to={"/join"}>
+            <Button text={"join"} className={"join_button"}></Button>
+          </Link>
         </div>
       </div>
       <div className="body">
