@@ -1,27 +1,41 @@
 import React from "react";
 import { Link } from "react-router-dom";
 
-function Login() {
+function Home({ isAuthenticated }) {
   return (
     <div>
       <div className="header">
         <h2 className="intro">Login Test App</h2>
         <div>
-          <Link to={"/login"}>
-            <button className={"login_button"}> login </button>
-          </Link>
-          <Link to={"/join"}>
-            <button className={"join_button"}> join </button>
-          </Link>
+          {isAuthenticated ? (
+            <>
+              <Link to={"/login"}>
+                <button className={"login_button"}> login </button>
+              </Link>
+              <Link to={"/join"}>
+                <button className={"join_button"}> join </button>
+              </Link>
+            </>
+          ) : (
+            <>
+              <Link to={"/logout"}>
+                <button className={"login_button"}>Logout</button>
+              </Link>
+            </>
+          )}
         </div>
       </div>
       <div className="body">
         <div className="status_text_container">
-          <h1>You should login</h1>
+          <h1>
+            {isAuthenticated
+              ? "Welcome. You are logged in."
+              : "You should login"}
+          </h1>
         </div>
       </div>
     </div>
   );
 }
 
-export default Login;
+export default Home;

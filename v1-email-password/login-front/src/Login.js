@@ -1,6 +1,6 @@
 import React from "react";
 
-function Login() {
+function Login({ setIsAuthenticated }) {
   return (
     <div className="frame">
       <div className="container">
