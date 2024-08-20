@@ -1,21 +1,19 @@
 import "./styles.css";
-import Button from "./Button";
+import { BrowserRouter, Route, Routes } from "react-router-dom";
+import Login from "./Login";
+import Join from "./Join";
+import Home from "./Home";
 
 function App() {
   return (
     <div>
-      <div className="header">
-        <h2 className="intro">Login Test App</h2>
-        <div>
-          <Button text={"login"} className={"login_button"}></Button>
-          <Button text={"join"} className={"join_button"}></Button>
-        </div>
-      </div>
-      <div className="body">
-        <div className="status_text_container">
-          <h1>You should login</h1>
-        </div>
-      </div>
+      <BrowserRouter>
+        <Routes>
+          <Route path="/" element={<Home />} />
+          <Route path="/login" element={<Login />} />
+          <Route path="/join" element={<Join />} />
+        </Routes>
+      </BrowserRouter>
     </div>
   );
 }
