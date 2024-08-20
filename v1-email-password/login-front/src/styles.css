@@ -1,0 +1,46 @@
+.header{
+    margin: 10px;
+    display: flex;
+    justify-content: space-between;
+}
+
+.intro{
+    color: #818181;
+}
+
+button{
+    font-family: "Arial Black", serif;
+    font-weight: bold;
+    font-size: 20px;
+    border-radius: 20px;
+    width: 150px;
+    height: 50px;
+}
+
+.login_button{
+    border: none;
+    color: #408cce;
+    backgroud-color: white;
+    margin: 10px;
+}
+
+.login_button:hover{
+    cursor: pointer;
+    background-color: #e4e4e4;
+}
+
+.join_button{
+    border: none;
+    color: white;
+    background-color: #408cce;
+    margin: 10px;
+}
+
+.join_button:hover{
+    cursor: pointer;
+    background-color: #6daee6;
+}
+
+.body{
+    text-align: center;
+}
