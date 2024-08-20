@@ -1,6 +1,8 @@
 package com.example.loginback.controller;
 
 
+import com.example.loginback.dto.JoinDto;
+import com.example.loginback.dto.LoginDto;
 import com.example.loginback.entity.User;
 import com.example.loginback.repository.UserRepository;
 import jakarta.servlet.http.HttpSession;
@@ -18,10 +20,10 @@ public class UserController {
     private final UserRepository userRepository;
 
     @PostMapping("/login")
-    public String login(@RequestBody User loginUser, HttpSession session) {
-        Optional<User> user = userRepository.findById(loginUser.getId());
+    public String login(@RequestBody LoginDto loginUser, HttpSession session) {
+        Optional<User> user = userRepository.findByEmail(loginUser.getEmail());
         if (user.isPresent() && user.get().getPassword().equals(loginUser.getPassword())) {
-            session.setAttribute("userId", user.get().getId());
+            session.setAttribute("userEmail", user.get().getEmail());
             return "Login Success";
         } else {
             return "Login Failed";
@@ -35,11 +37,12 @@ public class UserController {
     }
 
     @PostMapping("/join")
-    public String join(@RequestBody User newUser) {
-        if (userRepository.existsById(newUser.getId())) {
+    public String join(@RequestBody JoinDto newUser) {
+        if (userRepository.existsByEmail(newUser.getEmail())) {
             return "User already exists";
         }
-        userRepository.save(newUser);
+        User user = new User(newUser);
+        userRepository.save(user);
         return "Sign up Success";
     }
 }
