@@ -5,14 +5,16 @@ function App() {
   return (
     <div>
       <div className="header">
-        <h2 className="intro">Welcome to Login test App</h2>
+        <h2 className="intro">Login Test App</h2>
         <div>
           <Button text={"login"} className={"login_button"}></Button>
           <Button text={"join"} className={"join_button"}></Button>
         </div>
       </div>
       <div className="body">
-        <h1>You should login</h1>
+        <div className="status_text_container">
+          <h1>You should login</h1>
+        </div>
       </div>
     </div>
   );

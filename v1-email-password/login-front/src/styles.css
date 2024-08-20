@@ -44,3 +44,24 @@ button{
 .body{
     text-align: center;
 }
+
+.status_text_container{
+    text-align: center;
+    padding-top: 40px;
+    padding-bottom: 40px;
+    margin-top: 40px;
+    margin-bottom: 40px;
+}
+
+@keyframes blink {
+    0% {
+        opacity: 0.5;
+    }
+    100% {
+        opacity: 1;
+    }
+}
+
+.status_text_container h1 {
+    animation: blink 1s infinite alternate;
+}
