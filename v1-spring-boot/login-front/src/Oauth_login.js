@@ -37,6 +37,6 @@ export const handelKakaoOAuthLogin = (e) => {
     console.error("Kakaos Client ID or Redirect URI is missing!");
     return;
   }
-  const kakaoAuthUrl = `https://kauth.kakao.com/oauth/authorize?response_type=code&client_id=${kakaoClientId}&redirect_uri=${kakaoRedirectUri}&scope=profile%20email`;
+  const kakaoAuthUrl = `https://kauth.kakao.com/oauth/authorize?response_type=code&client_id=${kakaoClientId}&redirect_uri=${kakaoRedirectUri}`;
   window.location.href = kakaoAuthUrl;
 };

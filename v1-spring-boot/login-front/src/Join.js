@@ -2,7 +2,11 @@ import React, { useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
-import { handleGoogleOAuthLogin, handleNaverOAuthLogin } from "./Oauth_login";
+import {
+  handelKakaoOAuthLogin,
+  handleGoogleOAuthLogin,
+  handleNaverOAuthLogin,
+} from "./Oauth_login";
 
 function Join() {
   const [email, setEmail] = useState("");
@@ -76,10 +80,13 @@ function Join() {
         </form>
         <div className="oauth2_container">
           <button onClick={handleGoogleOAuthLogin} className="oauth2_button">
-            SignUp with Google
+            Login with Google
           </button>
           <button onClick={handleNaverOAuthLogin} className="oauth2_button">
-            SignUp with Naver
+            Login with Naver
+          </button>
+          <button onClick={handelKakaoOAuthLogin} className="oauth2_button">
+            Login with Kakao
           </button>
         </div>
       </div>

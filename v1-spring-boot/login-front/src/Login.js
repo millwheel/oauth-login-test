@@ -2,7 +2,11 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { toast } from "react-toastify";
-import { handleGoogleOAuthLogin, handleNaverOAuthLogin } from "./Oauth_login";
+import {
+  handelKakaoOAuthLogin,
+  handleGoogleOAuthLogin,
+  handleNaverOAuthLogin,
+} from "./Oauth_login";
 
 function Login({ setIsAuthenticated }) {
   const [email, setEmail] = useState("");
@@ -59,6 +63,9 @@ function Login({ setIsAuthenticated }) {
           </button>
           <button onClick={handleNaverOAuthLogin} className="oauth2_button">
             Login with Naver
+          </button>
+          <button onClick={handelKakaoOAuthLogin} className="oauth2_button">
+            Login with Kakao
           </button>
         </div>
       </div>
