@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { toast } from "react-toastify";
+import { handleGoogleOAuthLogin, handleNaverOAuthLogin } from "./Oauth_login";
 
 function Login({ setIsAuthenticated }) {
   const [email, setEmail] = useState("");
@@ -26,21 +27,6 @@ function Login({ setIsAuthenticated }) {
       setError(error.response?.data);
       console.error(error.response?.data || error.message);
     }
-  };
-
-  const googleClientId = "YOUR_GOOGLE_CLIENT_ID";
-  const naverClientId = "YOUR_NAVER_CLIENT_ID";
-  const naverRedirectUri = "YOUR_REDIRECT_URI";
-  const googleRedirectUri = "YOUR_REDIRECT_URI";
-
-  const handleGoogleLogin = () => {
-    const googleAuthUrl = `https://accounts.google.com/o/oauth2/auth?response_type=code&client_id=${googleClientId}&redirect_uri=${googleRedirectUri}&scope=profile%20email`;
-    window.location.href = googleAuthUrl;
-  };
-
-  const handleNaverLogin = () => {
-    const naverAuthUrl = `https://nid.naver.com/oauth2.0/authorize?response_type=code&client_id=${naverClientId}&redirect_uri=${naverRedirectUri}&state=RANDOM_STATE`;
-    window.location.href = naverAuthUrl;
   };
 
   return (
@@ -68,10 +54,10 @@ function Login({ setIsAuthenticated }) {
           </button>
         </form>
         <div className="oauth2_container">
-          <button onClick={handleGoogleLogin} className="oauth2_button">
+          <button onClick={handleGoogleOAuthLogin} className="oauth2_button">
             Login with Google
           </button>
-          <button onClick={handleNaverLogin} className="oauth2_button">
+          <button onClick={handleNaverOAuthLogin} className="oauth2_button">
             Login with Naver
           </button>
         </div>
