@@ -1,5 +1,6 @@
 package com.example.loginback.service;
 
+import com.example.loginback.entity.AuthProvider;
 import com.example.loginback.entity.User;
 import com.example.loginback.repository.UserRepository;
 import com.example.loginback.util.PasswordEncoder;
@@ -9,6 +10,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.security.NoSuchAlgorithmException;
+import java.util.Optional;
 
 
 @Service
@@ -42,6 +44,17 @@ public class UserService {
         }
         User user = new User(email, hashedPassword, name);
         userRepository.save(user);
+    }
+
+    public User processOAuthPostLogin(String email, String name, AuthProvider authProvider) {
+        Optional<User> existingUser = userRepository.findByEmail(email);
+
+        if (existingUser.isPresent()) {
+            return existingUser.get();
+        } else {
+            User user = new User(email, name, authProvider);
+            return userRepository.save(user);
+        }
     }
 
 }

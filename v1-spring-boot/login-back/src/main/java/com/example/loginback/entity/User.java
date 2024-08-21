@@ -1,9 +1,6 @@
 package com.example.loginback.entity;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -20,10 +17,18 @@ public class User {
     private String email;
     private String hashedPassword;
     private String name;
+    @Enumerated(EnumType.STRING)
+    private AuthProvider provider;
 
     public User(String email, String hashedPassword, String name) {
         this.email = email;
         this.hashedPassword = hashedPassword;
         this.name = name;
+    }
+
+    public User(String email, String name, AuthProvider provider) {
+        this.email = email;
+        this.name = name;
+        this.provider = provider;
     }
 }

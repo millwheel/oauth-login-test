@@ -95,6 +95,8 @@ public class OAuthController {
         String refreshToken = (String) responseBody.get("refresh_token");
         String expiresIn = (String) responseBody.get("expires_in");
 
+        log.info("access_token: {}", accessToken);
+
         LoginResponseDto loginResponseDto = LoginResponseDto.builder()
                 .message("naver login success")
                 .accessToken(accessToken)
