@@ -17,7 +17,7 @@ export const handleGoogleOAuthLogin = (e) => {
 export const handleNaverOAuthLogin = (e) => {
   e.preventDefault();
   const naverClientId = process.env.REACT_APP_NAVER_CLIENT_ID;
-  const naverRedirectUri = process.env.naver_redirect_uri;
+  const naverRedirectUri = process.env.REACT_APP_NAVER_REDIRECT_URI;
 
   if (!naverClientId || !naverRedirectUri) {
     console.error("Naver Client ID or Redirect URI is missing!");
