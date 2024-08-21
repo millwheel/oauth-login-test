@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
+import { toast } from "react-toastify";
 
 function Login({ setIsAuthenticated }) {
   const [email, setEmail] = useState("");
@@ -16,11 +17,13 @@ function Login({ setIsAuthenticated }) {
         password,
       });
 
-      console.log("Login successful:", response.data);
+      console.log(response.data);
+      toast.success(response.data);
+
       setIsAuthenticated(true);
       navigate("/");
     } catch (error) {
-      setError("Invalid login credentials");
+      setError(error.response?.data);
       console.error(error.response?.data || error.message);
     }
   };

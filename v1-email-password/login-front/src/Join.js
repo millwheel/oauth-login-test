@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
 
 function Join() {
   const [email, setEmail] = useState("");
@@ -24,11 +25,13 @@ function Join() {
         password,
       });
 
-      console.log("Signup successful:", response.data);
+      console.log(response.data);
+      toast.success(response.data);
+
       navigate("/");
     } catch (error) {
-      setError("Sign-up failed");
-      console.error(error.response?.data || error.message);
+      setError(error.response?.data);
+      console.error(error.response?.data);
     }
   };
 
