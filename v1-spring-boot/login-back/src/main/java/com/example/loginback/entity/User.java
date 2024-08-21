@@ -18,12 +18,12 @@ public class User {
     @GeneratedValue
     private Long id;
     private String email;
-    private String password;
+    private String hashedPassword;
     private String name;
 
-    public User(String email, String password, String name) {
+    public User(String email, String hashedPassword, String name) {
         this.email = email;
-        this.password = password;
+        this.hashedPassword = hashedPassword;
         this.name = name;
     }
 }

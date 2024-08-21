@@ -21,7 +21,7 @@ public class UserService {
         User user = userRepository.findByEmail(email)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found"));
         try {
-            if (!PasswordEncoder.verifyPassword(password, user.getPassword())) {
+            if (!PasswordEncoder.verifyPassword(password, user.getHashedPassword())) {
                 throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Wrong password");
             }
         } catch (NoSuchAlgorithmException e) {
@@ -34,7 +34,13 @@ public class UserService {
         if (userRepository.existsByEmail(email)) {
             throw new ResponseStatusException(HttpStatus.CONFLICT, "User already exists");
         }
-        User user = new User(email, password, name);
+        String hashedPassword;
+        try {
+            hashedPassword = PasswordEncoder.encodePasswordBySHA256(password);
+        } catch (NoSuchAlgorithmException e) {
+            throw new RuntimeException(e);
+        }
+        User user = new User(email, hashedPassword, name);
         userRepository.save(user);
     }
 
