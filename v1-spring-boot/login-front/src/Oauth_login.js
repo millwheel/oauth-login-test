@@ -5,7 +5,7 @@ export const generateStateToken = () => {
 export const handleGoogleOAuthLogin = (e) => {
   e.preventDefault();
   const googleClientId = process.env.REACT_APP_GOOGLE_CLIENT_ID;
-  const googleRedirectUri = "http://localhost:3000/oauth/google/callback";
+  const googleRedirectUri = process.env.REACT_APP_GOOGLE_REDIRECT_URI;
   if (!googleClientId || !googleRedirectUri) {
     console.error("Google Client ID or Redirect URI is missing!");
     return;
@@ -17,7 +17,7 @@ export const handleGoogleOAuthLogin = (e) => {
 export const handleNaverOAuthLogin = (e) => {
   e.preventDefault();
   const naverClientId = process.env.REACT_APP_NAVER_CLIENT_ID;
-  const naverRedirectUri = "http://localhost:3000/oauth/naver/callback";
+  const naverRedirectUri = process.env.naver_redirect_uri;
 
   if (!naverClientId || !naverRedirectUri) {
     console.error("Naver Client ID or Redirect URI is missing!");
@@ -31,7 +31,7 @@ export const handleNaverOAuthLogin = (e) => {
 export const handelKakaoOAuthLogin = (e) => {
   e.preventDefault();
   const kakaoClientId = process.env.REACT_APP_KAKAO_CLIENT_ID;
-  const kakaoRedirectUri = "http://localhost:3000/oauth/kakao/callback";
+  const kakaoRedirectUri = process.env.REACT_APP_KAKAO_REDIRECT_URI;
 
   if (!kakaoClientId || !kakaoRedirectUri) {
     console.error("Kakaos Client ID or Redirect URI is missing!");
