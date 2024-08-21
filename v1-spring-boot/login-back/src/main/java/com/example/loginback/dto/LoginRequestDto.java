@@ -3,8 +3,7 @@ package com.example.loginback.dto;
 import lombok.Data;
 
 @Data
-public class JoinDto {
+public class LoginRequestDto {
     private String email;
     private String password;
-    private String name;
 }

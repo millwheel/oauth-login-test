@@ -1,10 +1,9 @@
 package com.example.loginback.controller;
 
 
-import com.example.loginback.dto.JoinDto;
-import com.example.loginback.dto.LoginDto;
+import com.example.loginback.dto.JoinRequestDto;
+import com.example.loginback.dto.LoginRequestDto;
 import com.example.loginback.entity.User;
-import com.example.loginback.repository.UserRepository;
 import com.example.loginback.service.UserService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
@@ -16,8 +15,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.Optional;
-
 @RestController
 @RequiredArgsConstructor
 @Slf4j
@@ -26,7 +23,7 @@ public class UserController {
     private final UserService userService;
 
     @PostMapping("/login")
-    public ResponseEntity<String> login(HttpServletRequest request, @RequestBody LoginDto loginUser) {
+    public ResponseEntity<String> login(HttpServletRequest request, @RequestBody LoginRequestDto loginUser) {
         HttpSession session = request.getSession();
 
         if (session.getAttribute("userEmail") != null) {
@@ -49,7 +46,7 @@ public class UserController {
     }
 
     @PostMapping("/join")
-    public ResponseEntity<String> join(@RequestBody JoinDto newUser, HttpSession session) {
+    public ResponseEntity<String> join(@RequestBody JoinRequestDto newUser, HttpSession session) {
         if (session.getAttribute("userEmail") != null) {
             log.info(session.getAttribute("userEmail").toString());
             return new ResponseEntity<>("You are logged in user. logout first.", HttpStatus.CONFLICT);
