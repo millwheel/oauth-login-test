@@ -9,6 +9,7 @@ import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import Logout from "./Logout";
 import axios from "axios";
+import OAuthCallback from "./Oauth_callback";
 
 axios.defaults.baseURL = "http://localhost:8080";
 axios.defaults.withCredentials = true;
@@ -58,6 +59,18 @@ function App() {
           <Route
             path="/logout"
             element={<Logout setIsAuthenticated={setIsAuthenticated} />}
+          />
+          <Route
+            path="/oauth/google/callback"
+            element={<OAuthCallback provider="google" />}
+          />
+          <Route
+            path="/oauth/naver/callback"
+            element={<OAuthCallback provider="naver" />}
+          />
+          <Route
+            path="/oauth/kakao/callback"
+            element={<OAuthCallback provider="kakao" />}
           />
         </Routes>
       </BrowserRouter>
