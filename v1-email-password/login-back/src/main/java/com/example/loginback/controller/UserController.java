@@ -7,6 +7,8 @@ import com.example.loginback.entity.User;
 import com.example.loginback.repository.UserRepository;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
@@ -20,29 +22,33 @@ public class UserController {
     private final UserRepository userRepository;
 
     @PostMapping("/login")
-    public String login(@RequestBody LoginDto loginUser, HttpSession session) {
+    public ResponseEntity<String> login(@RequestBody LoginDto loginUser, HttpSession session) {
         Optional<User> user = userRepository.findByEmail(loginUser.getEmail());
         if (user.isPresent() && user.get().getPassword().equals(loginUser.getPassword())) {
             session.setAttribute("userEmail", user.get().getEmail());
-            return "Login Success";
+            return new ResponseEntity<>("Login Success", HttpStatus.OK);
         } else {
-            return "Login Failed";
+            return new ResponseEntity<>("Login Failed", HttpStatus.UNAUTHORIZED);
         }
     }
 
     @PostMapping("/logout")
-    public String logout(HttpSession session) {
-        session.invalidate();
-        return "Logout Success";
+    public ResponseEntity<String> logout(HttpSession session) {
+        try {
+            session.invalidate();
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
+        }
+        return new ResponseEntity<>("Logout Success", HttpStatus.OK);
     }
 
     @PostMapping("/join")
-    public String join(@RequestBody JoinDto newUser) {
+    public ResponseEntity<String> join(@RequestBody JoinDto newUser) {
         if (userRepository.existsByEmail(newUser.getEmail())) {
-            return "User already exists";
+            return new ResponseEntity<>("User already exists", HttpStatus.CONFLICT);
         }
         User user = new User(newUser);
         userRepository.save(user);
-        return "Sign up Success";
+        return new ResponseEntity<>("Sign up Success", HttpStatus.CREATED);
     }
 }
