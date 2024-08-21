@@ -14,10 +14,7 @@ const Logout = ({ setIsAuthenticated }) => {
         toastId: "logoutSuccess1",
       });
 
-      // Update authentication state
       setIsAuthenticated(false);
-
-      // Navigate to home after logout
       navigate("/");
     } catch (error) {
       console.error(error.response?.data || error.message);

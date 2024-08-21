@@ -62,15 +62,30 @@ function App() {
           />
           <Route
             path="/oauth/google/callback"
-            element={<OAuthCallback provider="google" />}
+            element={
+              <OAuthCallback
+                provider="google"
+                setIsAuthenticated={setIsAuthenticated}
+              />
+            }
           />
           <Route
             path="/oauth/naver/callback"
-            element={<OAuthCallback provider="naver" />}
+            element={
+              <OAuthCallback
+                provider="naver"
+                setIsAuthenticated={setIsAuthenticated}
+              />
+            }
           />
           <Route
             path="/oauth/kakao/callback"
-            element={<OAuthCallback provider="kakao" />}
+            element={
+              <OAuthCallback
+                provider="kakao"
+                setIsAuthenticated={setIsAuthenticated}
+              />
+            }
           />
         </Routes>
       </BrowserRouter>
