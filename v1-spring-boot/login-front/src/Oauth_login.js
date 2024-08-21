@@ -27,3 +27,16 @@ export const handleNaverOAuthLogin = (e) => {
   const naverAuthUrl = `https://nid.naver.com/oauth2.0/authorize?response_type=code&client_id=${naverClientId}&redirect_uri=${naverRedirectUri}&state=${stateToken}`;
   window.location.href = naverAuthUrl;
 };
+
+export const handelKakaoOAuthLogin = (e) => {
+  e.preventDefault();
+  const kakaoClientId = process.env.REACT_APP_KAKAO_CLIENT_ID;
+  const kakaoRedirectUri = "http://localhost:3000/oauth/kakao/callback";
+
+  if (!kakaoClientId || !kakaoRedirectUri) {
+    console.error("Kakaos Client ID or Redirect URI is missing!");
+    return;
+  }
+  const kakaoAuthUrl = `https://kauth.kakao.com/oauth/authorize?response_type=code&client_id=${kakaoClientId}&redirect_uri=${kakaoRedirectUri}&scope=profile%20email`;
+  window.location.href = kakaoAuthUrl;
+};
