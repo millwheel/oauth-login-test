@@ -25,7 +25,7 @@ public class OAuthController {
     private final OAuthProperties oAuthProperties;
     private final UserService userService;
 
-    @PostMapping("/google/callback")
+    @PostMapping("/google/token")
     public ResponseEntity<?> getGoogleToken(@RequestParam("code") String code){
         String clientId = oAuthProperties.getGoogle().getClientId();
         String clientSecret = oAuthProperties.getGoogle().getClientSecret();
@@ -62,6 +62,48 @@ public class OAuthController {
         log.info("token_type: {}", tokenType);
         log.info("scope: {}", scope);
         log.info("refresh_token: {}", refreshToken);
+
+        return null;
+    }
+
+    @PostMapping("/naver/token")
+    public ResponseEntity<?> getNaverToken(@RequestParam("code") String code, @RequestParam("state") String state){
+        String clientId = oAuthProperties.getNaver().getClientId();
+        String clientSecret = oAuthProperties.getNaver().getClientSecret();
+        String redirectUri = oAuthProperties.getNaver().getRedirectUri();
+        String baseUrl = "https://nid.naver.com/oauth2.0/token";
+
+        String apiUrl = baseUrl +
+                "?grant_type=authorization_code&client_id=" + clientId
+                + "&client_secret=" + clientSecret
+                + "&redirect_uri=" + redirectUri
+                + "&code=" + code
+                + "&state=" + state;
+
+        RestClient restClient = RestClient.create();
+
+        ResponseEntity<Map> responseEntity = restClient.get()
+                .uri(apiUrl)
+                .retrieve()
+                .toEntity(Map.class);
+
+
+        HttpStatusCode statusCode = responseEntity.getStatusCode();
+        log.info(statusCode.toString());
+        Map responseBody = responseEntity.getBody();
+        assert responseBody != null;
+        String accessToken = (String) responseBody.get("access_token");
+        String refreshToken = (String) responseBody.get("refresh_token");
+        String tokenType = (String) responseBody.get("token_type");
+        Integer expiresIn = (Integer) responseBody.get("expires_in");
+        String error = (String) responseBody.get("error");
+        String errorDescription = (String) responseBody.get("error_description");
+        log.info("access_token: {}", accessToken);
+        log.info("expires_in: {}", expiresIn);
+        log.info("token_type: {}", tokenType);
+        log.info("refresh_token: {}", refreshToken);
+        log.error("error: {}", error);
+        log.error("errorDescription: {}", errorDescription);
 
         return null;
     }
