@@ -73,6 +73,10 @@ function Join() {
             Submit
           </button>
         </form>
+        <div className="oauth2_container">
+          <button className="oauth2_button">SignUp with Google</button>
+          <button className="oauth2_button">SignUp with Naver</button>
+        </div>
       </div>
     </div>
   );
