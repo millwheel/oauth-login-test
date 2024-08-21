@@ -5,6 +5,7 @@ import com.example.loginback.dto.JoinDto;
 import com.example.loginback.dto.LoginDto;
 import com.example.loginback.entity.User;
 import com.example.loginback.repository.UserRepository;
+import com.example.loginback.service.UserService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
@@ -22,7 +23,7 @@ import java.util.Optional;
 @Slf4j
 public class UserController {
 
-    private final UserRepository userRepository;
+    private final UserService userService;
 
     @PostMapping("/login")
     public ResponseEntity<String> login(HttpServletRequest request, @RequestBody LoginDto loginUser) {
@@ -32,14 +33,8 @@ public class UserController {
             log.info(session.getAttribute("userEmail").toString());
             return new ResponseEntity<>("You are already logged in!", HttpStatus.CONFLICT);
         }
-        Optional<User> user = userRepository.findByEmail(loginUser.getEmail());
-        if (user.isEmpty()) {
-            return new ResponseEntity<>("User is not present", HttpStatus.UNAUTHORIZED);
-        }
-        if (!user.get().getPassword().equals(loginUser.getPassword())) {
-            return new ResponseEntity<>("Wrong password", HttpStatus.UNAUTHORIZED);
-        }
-        session.setAttribute("userEmail", user.get().getEmail());
+        User user = userService.getUser(loginUser.getEmail(), loginUser.getPassword());
+        session.setAttribute("userEmail", user.getEmail());
         return new ResponseEntity<>("Login Success", HttpStatus.OK);
     }
 
@@ -59,11 +54,7 @@ public class UserController {
             log.info(session.getAttribute("userEmail").toString());
             return new ResponseEntity<>("You are logged in user. logout first.", HttpStatus.CONFLICT);
         }
-        if (userRepository.existsByEmail(newUser.getEmail())) {
-            return new ResponseEntity<>("User already exists", HttpStatus.CONFLICT);
-        }
-        User user = new User(newUser);
-        userRepository.save(user);
+        userService.createUser(newUser.getEmail(), newUser.getPassword(), newUser.getName());
         return new ResponseEntity<>("Sign up Success", HttpStatus.CREATED);
     }
 }

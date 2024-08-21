@@ -1,6 +1,5 @@
 package com.example.loginback.entity;
 
-import com.example.loginback.dto.JoinDto;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
@@ -22,10 +21,9 @@ public class User {
     private String password;
     private String name;
 
-    public User(JoinDto joinDto) {
-        this.email = joinDto.getEmail();
-        this.password = joinDto.getPassword();
-        this.name = joinDto.getName();
+    public User(String email, String password, String name) {
+        this.email = email;
+        this.password = password;
+        this.name = name;
     }
-
 }
