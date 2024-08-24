@@ -11,4 +11,10 @@ public class LoginResponseDto {
     private String message;
     private String accessToken;
     private Integer expiresIn;
+    private String email;
+    private String name;
+
+    public LoginResponseDto(String message) {
+        this.message = message;
+    }
 }

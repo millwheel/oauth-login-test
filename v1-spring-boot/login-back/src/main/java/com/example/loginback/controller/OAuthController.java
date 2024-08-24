@@ -1,10 +1,17 @@
 package com.example.loginback.controller;
 
 import com.example.loginback.config.OAuthProperties;
+import com.example.loginback.controller.sender.NaverApiSender;
 import com.example.loginback.dto.LoginResponseDto;
+import com.example.loginback.dto.TokenInfoDto;
+import com.example.loginback.dto.UserInfoDto;
+import com.example.loginback.entity.AuthProvider;
+import com.example.loginback.entity.User;
+import com.example.loginback.exception.EmptyTokenException;
+import com.example.loginback.exception.RequestFailException;
+import com.example.loginback.exception.UserInfoEmptyException;
 import com.example.loginback.service.UserService;
 import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -25,6 +32,7 @@ public class OAuthController {
 
     private final OAuthProperties oAuthProperties;
     private final UserService userService;
+    private final NaverApiSender naverApiSender;
 
     @GetMapping("/google/token")
     public ResponseEntity<?> getGoogleToken(@RequestParam("code") String code){
@@ -72,38 +80,41 @@ public class OAuthController {
         String clientId = oAuthProperties.getNaver().getClientId();
         String clientSecret = oAuthProperties.getNaver().getClientSecret();
         String baseUrl = "https://nid.naver.com/oauth2.0/token";
-
-        String apiUrl = baseUrl +
+        String tokenUrl = baseUrl +
                 "?grant_type=authorization_code&client_id=" + clientId
                 + "&client_secret=" + clientSecret
                 + "&code=" + code
                 + "&state=" + state;
 
-        RestClient restClient = RestClient.create();
+        TokenInfoDto tokenInfoDto;
+        try {
+            tokenInfoDto = naverApiSender.exchangeToken(tokenUrl);
+        } catch (RequestFailException | EmptyTokenException e) {
+            LoginResponseDto loginResponseDto = new LoginResponseDto(e.getMessage());
+            return new ResponseEntity<>(loginResponseDto, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
 
-        ResponseEntity<Map> responseEntity = restClient.get()
-                .uri(apiUrl)
-                .retrieve()
-                .toEntity(Map.class);
 
+        UserInfoDto userInfo;
+        try {
+            userInfo = naverApiSender.getUserInfo(tokenInfoDto.getAccessToken());
+        } catch (RequestFailException | UserInfoEmptyException e) {
+            LoginResponseDto loginResponseDto = new LoginResponseDto(e.getMessage());
+            return new ResponseEntity<>(loginResponseDto, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
 
-        HttpStatusCode statusCode = responseEntity.getStatusCode();
-        log.info(statusCode.toString());
-        Map responseBody = responseEntity.getBody();
-        assert responseBody != null;
-        String accessToken = (String) responseBody.get("access_token");
-        String refreshToken = (String) responseBody.get("refresh_token");
-        String expiresIn = (String) responseBody.get("expires_in");
-
-        log.info("access_token: {}", accessToken);
+        User user = userService.processOAuthPostLogin(userInfo.getEmail(), userInfo.getName(), AuthProvider.NAVER);
 
         LoginResponseDto loginResponseDto = LoginResponseDto.builder()
-                .message("naver login success")
-                .accessToken(accessToken)
-                .expiresIn(Integer.parseInt(expiresIn))
+                .email(user.getEmail())
+                .name(user.getName())
+                .accessToken(tokenInfoDto.getAccessToken())
+                .expiresIn(Integer.parseInt(tokenInfoDto.getExpiresIn()))
                 .build();
 
         return new ResponseEntity<>(loginResponseDto, HttpStatus.OK);
     }
+
+
 
 }
