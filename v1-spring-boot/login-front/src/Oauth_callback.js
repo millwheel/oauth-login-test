@@ -4,46 +4,29 @@ import axios from "axios";
 import { toast } from "react-toastify";
 import { setCookie } from "./Cookie";
 
-function OAuthCallback({ provider, setIsAuthenticated }) {
+function OAuthCallback({ provider, setIsAuthenticated, setEmail, setName }) {
   const navigate = useNavigate();
   const location = useLocation();
   const [error, setError] = useState("");
+  const [requestMade, setRequestMade] = useState(false);
 
   const handleOAuthCallback = async () => {
-    try {
-      let url = "";
-      const params = new URLSearchParams(location.search);
-      switch (provider) {
-        case "google":
-          url = getGoogleOAuthCallbackUrl(params);
-          break;
-        case "naver":
-          url = getNaverOAuthCallbackUrl(params);
-          break;
-        case "kakao":
-          url = getKakaoOAuthCallbackUrl(params);
-          break;
-        default:
-          throw new Error("Unsupported OAuth provider");
-      }
-
-      const response = await axios.get(url);
-      console.log("OAuth success:", response.data);
-      const { message, accessToken, expiresIn, email, name } = response.data;
-      toast.success(message, {
-        toastId: "loginSuccess2",
-      });
-      console.log("expires" + expiresIn);
-      console.log("email" + email);
-      console.log("name" + name);
-
-      setCookie("access_token", accessToken, expiresIn);
-      setIsAuthenticated(true);
-      navigate("/");
-    } catch (error) {
-      setError(error.response?.data);
-      console.error(error.response?.data || error.message);
+    let url = "";
+    const params = new URLSearchParams(location.search);
+    switch (provider) {
+      case "google":
+        url = getGoogleOAuthCallbackUrl(params);
+        break;
+      case "naver":
+        url = getNaverOAuthCallbackUrl(params);
+        break;
+      case "kakao":
+        url = getKakaoOAuthCallbackUrl(params);
+        break;
+      default:
+        throw new Error("Unsupported OAuth provider");
     }
+    return await axios.get(url);
   };
 
   const getGoogleOAuthCallbackUrl = (params) => {
@@ -63,7 +46,23 @@ function OAuthCallback({ provider, setIsAuthenticated }) {
   };
 
   useEffect(() => {
-    handleOAuthCallback();
+    handleOAuthCallback()
+      .then((response) => {
+        const { message, accessToken, expiresIn, email, name } = response.data;
+        toast.success(message, {
+          toastId: "loginSuccess2",
+        });
+
+        setEmail(email);
+        setName(name);
+        setCookie("access_token", accessToken, expiresIn);
+        setIsAuthenticated(true);
+        navigate("/");
+      })
+      .catch((error) => {
+        setError(error.response?.data);
+        console.error(error.response?.data || error.message);
+      });
   }, []);
 
   return (

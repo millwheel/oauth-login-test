@@ -16,6 +16,8 @@ axios.defaults.withCredentials = true;
 
 function App() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [email, setEmail] = useState("");
+  const [name, setName] = useState("");
 
   const checkAuthStatus = async () => {
     try {
@@ -49,7 +51,13 @@ function App() {
         <Routes>
           <Route
             path="/"
-            element={<Home isAuthenticated={isAuthenticated} />}
+            element={
+              <Home
+                isAuthenticated={isAuthenticated}
+                name={name}
+                email={email}
+              />
+            }
           />
           <Route
             path="/login"
@@ -66,6 +74,8 @@ function App() {
               <OAuthCallback
                 provider="google"
                 setIsAuthenticated={setIsAuthenticated}
+                setName={setName}
+                setEmail={setEmail}
               />
             }
           />
@@ -75,6 +85,8 @@ function App() {
               <OAuthCallback
                 provider="naver"
                 setIsAuthenticated={setIsAuthenticated}
+                setName={setName}
+                setEmail={setEmail}
               />
             }
           />
@@ -84,6 +96,8 @@ function App() {
               <OAuthCallback
                 provider="kakao"
                 setIsAuthenticated={setIsAuthenticated}
+                setName={setName}
+                setEmail={setEmail}
               />
             }
           />

@@ -1,7 +1,7 @@
 import React from "react";
 import { Link } from "react-router-dom";
 
-function Home({ isAuthenticated }) {
+function Home({ isAuthenticated, name, email }) {
   return (
     <div>
       <div className="header">
@@ -27,11 +27,17 @@ function Home({ isAuthenticated }) {
       </div>
       <div className="body">
         <div className="status_text_container">
-          <h1>
-            {isAuthenticated
-              ? "Welcome. You are logged in."
-              : "You should login"}
-          </h1>
+          {isAuthenticated ? (
+            <>
+              <h1> "Welcome. You are logged in." </h1>
+              <h2> email: {email} </h2>
+              <h2> name: {name} </h2>
+            </>
+          ) : (
+            <>
+              <h1> "You should log in." </h1>
+            </>
+          )}
         </div>
       </div>
     </div>
