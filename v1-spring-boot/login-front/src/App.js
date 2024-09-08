@@ -20,22 +20,22 @@ function App() {
   const [name, setName] = useState("");
 
   const checkAuthStatus = async () => {
-    try {
-      const response = await axios.get("/session");
-
-      if (response.data.isAuthenticated) {
-        setIsAuthenticated(true);
-      } else {
-        setIsAuthenticated(false);
-      }
-    } catch (error) {
-      setIsAuthenticated(false);
-      console.error("Session check failed", error);
-    }
+    return await axios.get("/session");
   };
 
   useEffect(() => {
-    checkAuthStatus();
+    checkAuthStatus()
+      .then((response) => {
+        if (response.data.isAuthenticated) {
+          setIsAuthenticated(true);
+        } else {
+          setIsAuthenticated(false);
+        }
+      })
+      .catch((error) => {
+        setIsAuthenticated(false);
+        console.error("Session check failed", error);
+      });
   }, []);
 
   return (
