@@ -50,14 +50,13 @@ public class OAuthController {
 
         UserInfoDto userInfo;
         try {
-            String userUrl = "https://www.googleapis.com/oauth2/v3/userinfo";
-            userInfo = commonApiSender.getUserInfo(userUrl, tokenInfoDto.getAccessToken());
+            userInfo = googleApiSender.getUserInfo(tokenInfoDto.getIdToken());
         } catch (RequestFailException | UserInfoEmptyException e) {
             LoginResponseDto loginResponseDto = new LoginResponseDto(e.getMessage());
             return new ResponseEntity<>(loginResponseDto, HttpStatus.INTERNAL_SERVER_ERROR);
         }
 
-        User user = userService.processOAuthPostLogin(userInfo.getEmail(), userInfo.getName(), AuthProvider.NAVER);
+        User user = userService.processOAuthPostLogin(userInfo.getEmail(), userInfo.getName(), AuthProvider.GOOGLE);
 
         LoginResponseDto loginResponseDto = LoginResponseDto.builder()
                 .email(user.getEmail())
