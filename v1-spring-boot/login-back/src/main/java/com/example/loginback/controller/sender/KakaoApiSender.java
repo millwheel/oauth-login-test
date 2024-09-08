@@ -1,14 +1,9 @@
 package com.example.loginback.controller.sender;
 
-import com.auth0.jwt.JWT;
-import com.auth0.jwt.interfaces.DecodedJWT;
-import com.example.loginback.dto.GoogleTokenResponse;
 import com.example.loginback.dto.TokenInfoDto;
 import com.example.loginback.dto.UserInfoDto;
 import com.example.loginback.exception.EmptyTokenException;
 import com.example.loginback.exception.RequestFailException;
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
@@ -19,12 +14,14 @@ import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestClient;
 
-@Slf4j
+import java.util.Map;
+
 @Component
-public class GoogleApiSender {
+@Slf4j
+public class KakaoApiSender {
 
     public TokenInfoDto exchangeToken(String code, String clientId, String clientSecret, String redirectUri){
-        String url = "https://oauth2.googleapis.com/token";
+        String url = "https://kauth.kakao.com/oauth/token";
 
         MultiValueMap<String, String> formData = new LinkedMultiValueMap<>();
         formData.add("code", code);
@@ -35,53 +32,55 @@ public class GoogleApiSender {
 
         RestClient restClient = RestClient.create();
 
-        ResponseEntity<String> responseEntity = restClient.post()
+        ResponseEntity<Map> responseEntity = restClient.post()
                 .uri(url)
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
                 .body(formData)
                 .retrieve()
-                .toEntity(String.class);
+                .toEntity(Map.class);
 
         HttpStatusCode statusCode = responseEntity.getStatusCode();
-
         if (statusCode != HttpStatus.OK) {
             throw new RequestFailException(statusCode);
         }
 
-        String responseBody = responseEntity.getBody();
-        ObjectMapper objectMapper = new ObjectMapper();
-        GoogleTokenResponse googleTokenResponse = null;
-        try {
-            googleTokenResponse = objectMapper.readValue(responseBody, GoogleTokenResponse.class);
-        } catch (JsonProcessingException e) {
-            throw new RuntimeException(e);
-        }
-
+        Map responseBody = responseEntity.getBody();
         assert responseBody != null;
+        String accessToken = (String) responseBody.get("access_token");
+        Integer expiresIn = (Integer) responseBody.get("expires_in");
+        String refreshToken = (String) responseBody.get("refresh_token");
 
-        if (googleTokenResponse == null){
+        if (accessToken == null || expiresIn == null) {
             throw new EmptyTokenException();
         }
 
-        String accessToken = googleTokenResponse.getAccess_token();
-        Integer expiresIn = googleTokenResponse.getExpires_in();
-        String idToken = googleTokenResponse.getId_token();
+        return new TokenInfoDto(accessToken, String.valueOf(expiresIn));
+    }
 
-        if (accessToken == null || idToken == null){
-            throw new EmptyTokenException();
+    public UserInfoDto getUserInfo(String accessToken){
+        String userInfoUrl = "https://kapi.kakao.com/v2/user/me";
+
+        RestClient restClient = RestClient.create();
+        ResponseEntity<Map> responseEntity = restClient.get()
+                .uri(userInfoUrl)
+                .header("Authorization", "Bearer " + accessToken)
+                .retrieve()
+                .toEntity(Map.class);
+
+        HttpStatusCode statusCode = responseEntity.getStatusCode();
+        if (statusCode != HttpStatus.OK) {
+            throw new RequestFailException(statusCode);
         }
 
-        return new TokenInfoDto(accessToken, String.valueOf(expiresIn), idToken);
+        Map responseBody = responseEntity.getBody();
+        assert responseBody != null;
+        String email = "Not Available";
+        Map<String, Object> kakaoAccount = (Map<String, Object>) responseBody.get("kakao_account");
+        Map<String, String> profile = (Map<String, String>) kakaoAccount.get("profile");
+        String name = profile.get("nickname");
+
+        return new UserInfoDto(email, name);
     }
 
-    public UserInfoDto getUserInfo(String idToken){
-        DecodedJWT jwt = JWT.decode(idToken);
-
-        String email = jwt.getClaim("email").asString();
-        String givenName = jwt.getClaim("given_name").asString();
-        String familyName = jwt.getClaim("family_name").asString();
-
-        return new UserInfoDto(email, givenName + " " + familyName);
-    }
 
 }

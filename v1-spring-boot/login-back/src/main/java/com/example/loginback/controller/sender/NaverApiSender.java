@@ -31,12 +31,11 @@ public class NaverApiSender {
                 .toEntity(Map.class);
 
         HttpStatusCode statusCode = responseEntity.getStatusCode();
-        Map responseBody = responseEntity.getBody();
-
         if (statusCode != HttpStatus.OK) {
             throw new RequestFailException(statusCode);
         }
 
+        Map responseBody = responseEntity.getBody();
         assert responseBody != null;
         String accessToken = (String) responseBody.get("access_token");
         String expiresIn = (String) responseBody.get("expires_in");
@@ -48,10 +47,12 @@ public class NaverApiSender {
         return new TokenInfoDto(accessToken, expiresIn);
     }
 
-    public UserInfoDto getUserInfo(String userUrl, String accessToken){
+    public UserInfoDto getUserInfo(String accessToken){
+        String userInfoUrl = "https://openapi.naver.com/v1/nid/me";
+
         RestClient restClient = RestClient.create();
         ResponseEntity<Map> responseEntity = restClient.get()
-                .uri(userUrl)
+                .uri(userInfoUrl)
                 .header("Authorization", "Bearer " + accessToken)
                 .retrieve()
                 .toEntity(Map.class);

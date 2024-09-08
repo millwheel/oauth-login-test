@@ -2,6 +2,7 @@ package com.example.loginback.controller;
 
 import com.example.loginback.config.OAuthProperties;
 import com.example.loginback.controller.sender.GoogleApiSender;
+import com.example.loginback.controller.sender.KakaoApiSender;
 import com.example.loginback.controller.sender.NaverApiSender;
 import com.example.loginback.dto.LoginResponseDto;
 import com.example.loginback.dto.TokenInfoDto;
@@ -12,7 +13,6 @@ import com.example.loginback.exception.EmptyTokenException;
 import com.example.loginback.exception.RequestFailException;
 import com.example.loginback.exception.UserInfoEmptyException;
 import com.example.loginback.service.UserService;
-import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -31,6 +31,7 @@ public class OAuthController {
     private final UserService userService;
     private final GoogleApiSender googleApiSender;
     private final NaverApiSender naverApiSender;
+    private final KakaoApiSender kakaoApiSender;
 
     @GetMapping("/google/token")
     public ResponseEntity<LoginResponseDto> getGoogleToken(@RequestParam("code") String code){
@@ -82,8 +83,7 @@ public class OAuthController {
 
         UserInfoDto userInfo;
         try {
-            String userUrl = "https://openapi.naver.com/v1/nid/me";
-            userInfo = naverApiSender.getUserInfo(userUrl, tokenInfoDto.getAccessToken());
+            userInfo = naverApiSender.getUserInfo(tokenInfoDto.getAccessToken());
         } catch (RequestFailException | UserInfoEmptyException e) {
             LoginResponseDto loginResponseDto = new LoginResponseDto(e.getMessage());
             return new ResponseEntity<>(loginResponseDto, HttpStatus.INTERNAL_SERVER_ERROR);
@@ -101,6 +101,38 @@ public class OAuthController {
         return new ResponseEntity<>(loginResponseDto, HttpStatus.OK);
     }
 
+    @GetMapping("/kakao/token")
+    public ResponseEntity<LoginResponseDto> getKakaoToken(@RequestParam("code") String code){
+        String clientId = oAuthProperties.getKakao().getClientId();
+        String clientSecret = oAuthProperties.getKakao().getClientSecret();
+        String redirectUri = oAuthProperties.getKakao().getRedirectUri();
 
+        TokenInfoDto tokenInfoDto;
+        try {
+            tokenInfoDto = kakaoApiSender.exchangeToken(code, clientId, clientSecret, redirectUri);
+        } catch (RequestFailException | EmptyTokenException e) {
+            LoginResponseDto loginResponseDto = new LoginResponseDto(e.getMessage());
+            return new ResponseEntity<>(loginResponseDto, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+
+        UserInfoDto userInfo;
+        try {
+            userInfo = kakaoApiSender.getUserInfo(tokenInfoDto.getAccessToken());
+        } catch (RequestFailException | UserInfoEmptyException e) {
+            LoginResponseDto loginResponseDto = new LoginResponseDto(e.getMessage());
+            return new ResponseEntity<>(loginResponseDto, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+
+        User user = userService.processOAuthPostLogin(userInfo.getEmail(), userInfo.getName(), AuthProvider.KAKAO);
+
+        LoginResponseDto loginResponseDto = LoginResponseDto.builder()
+                .email(user.getEmail())
+                .name(user.getName())
+                .accessToken(tokenInfoDto.getAccessToken())
+                .expiresIn(Integer.parseInt(tokenInfoDto.getExpiresIn()))
+                .build();
+
+        return new ResponseEntity<>(loginResponseDto, HttpStatus.OK);
+    }
 
 }
