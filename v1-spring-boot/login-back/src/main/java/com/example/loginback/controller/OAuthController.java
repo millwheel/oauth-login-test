@@ -1,7 +1,6 @@
 package com.example.loginback.controller;
 
 import com.example.loginback.config.OAuthProperties;
-import com.example.loginback.controller.sender.CommonApiSender;
 import com.example.loginback.controller.sender.GoogleApiSender;
 import com.example.loginback.controller.sender.NaverApiSender;
 import com.example.loginback.dto.LoginResponseDto;
@@ -32,7 +31,6 @@ public class OAuthController {
     private final UserService userService;
     private final GoogleApiSender googleApiSender;
     private final NaverApiSender naverApiSender;
-    private final CommonApiSender commonApiSender;
 
     @GetMapping("/google/token")
     public ResponseEntity<LoginResponseDto> getGoogleToken(@RequestParam("code") String code){
@@ -69,8 +67,7 @@ public class OAuthController {
     }
 
     @GetMapping("/naver/token")
-    public ResponseEntity<LoginResponseDto> getNaverToken(HttpServletRequest request,
-                                                          @RequestParam("code") String code,
+    public ResponseEntity<LoginResponseDto> getNaverToken(@RequestParam("code") String code,
                                                           @RequestParam("state") String state){
         String clientId = oAuthProperties.getNaver().getClientId();
         String clientSecret = oAuthProperties.getNaver().getClientSecret();
@@ -86,7 +83,7 @@ public class OAuthController {
         UserInfoDto userInfo;
         try {
             String userUrl = "https://openapi.naver.com/v1/nid/me";
-            userInfo = commonApiSender.getUserInfo(userUrl, tokenInfoDto.getAccessToken());
+            userInfo = naverApiSender.getUserInfo(userUrl, tokenInfoDto.getAccessToken());
         } catch (RequestFailException | UserInfoEmptyException e) {
             LoginResponseDto loginResponseDto = new LoginResponseDto(e.getMessage());
             return new ResponseEntity<>(loginResponseDto, HttpStatus.INTERNAL_SERVER_ERROR);

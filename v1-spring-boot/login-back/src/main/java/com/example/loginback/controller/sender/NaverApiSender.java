@@ -48,4 +48,31 @@ public class NaverApiSender {
         return new TokenInfoDto(accessToken, expiresIn);
     }
 
+    public UserInfoDto getUserInfo(String userUrl, String accessToken){
+        RestClient restClient = RestClient.create();
+        ResponseEntity<Map> responseEntity = restClient.get()
+                .uri(userUrl)
+                .header("Authorization", "Bearer " + accessToken)
+                .retrieve()
+                .toEntity(Map.class);
+
+        HttpStatusCode statusCode = responseEntity.getStatusCode();
+        Map responseBody = responseEntity.getBody();
+
+        if (statusCode != HttpStatus.OK) {
+            throw new RequestFailException(statusCode);
+        }
+
+        assert responseBody != null;
+        Map<String, String> response = (Map<String, String>) responseBody.get("response");
+        String email = response.get("email");
+        String name = response.get("name");
+
+        if (email == null || name == null) {
+            throw new UserInfoEmptyException();
+        }
+
+        return new UserInfoDto(email, name);
+    }
+
 }

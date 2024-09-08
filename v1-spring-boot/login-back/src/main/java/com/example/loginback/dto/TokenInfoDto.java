@@ -9,7 +9,7 @@ public class TokenInfoDto {
     private String idToken;
     private String expiresIn;
 
-    public TokenInfoDto(String expiresIn, String idToken, String accessToken) {
+    public TokenInfoDto(String accessToken, String idToken, String expiresIn) {
         this.expiresIn = expiresIn;
         this.idToken = idToken;
         this.accessToken = accessToken;
