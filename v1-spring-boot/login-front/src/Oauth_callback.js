@@ -12,13 +12,16 @@ function OAuthCallback({ provider, setIsAuthenticated }) {
   const handleOAuthCallback = async () => {
     try {
       let url = "";
+      const params = new URLSearchParams(location.search);
       switch (provider) {
         case "google":
+          url = getGoogleOAuthCallbackUrl(params);
           break;
         case "naver":
-          url = getNaverOAuthCallbackUrl();
+          url = getNaverOAuthCallbackUrl(params);
           break;
         case "kakao":
+          url = getKakaoOAuthCallbackUrl(params);
           break;
         default:
           throw new Error("Unsupported OAuth provider");
@@ -26,11 +29,13 @@ function OAuthCallback({ provider, setIsAuthenticated }) {
 
       const response = await axios.get(url);
       console.log("OAuth success:", response.data);
-      const { message, accessToken, expiresIn } = response.data;
+      const { message, accessToken, expiresIn, email, name } = response.data;
       toast.success(message, {
         toastId: "loginSuccess2",
       });
       console.log("expires" + expiresIn);
+      console.log("email" + email);
+      console.log("name" + name);
 
       setCookie("access_token", accessToken, expiresIn);
       setIsAuthenticated(true);
@@ -41,16 +46,21 @@ function OAuthCallback({ provider, setIsAuthenticated }) {
     }
   };
 
-  const getGoogleOAuthCallbackUrl = () => {};
+  const getGoogleOAuthCallbackUrl = (params) => {
+    const code = params.get("code");
+    return `http://localhost:8080/oauth/google/token?code=${code}`;
+  };
 
-  const getNaverOAuthCallbackUrl = () => {
-    const params = new URLSearchParams(location.search);
+  const getNaverOAuthCallbackUrl = (params) => {
     const code = params.get("code");
     const state = params.get("state");
     return `http://localhost:8080/oauth/naver/token?code=${code}&state=${state}`;
   };
 
-  const getKakaoOAuthCallbackUrl = () => {};
+  const getKakaoOAuthCallbackUrl = (params) => {
+    const code = params.get("code");
+    return `http://localhost:8080/oauth/kakao/token?code=${code}`;
+  };
 
   useEffect(() => {
     handleOAuthCallback();
