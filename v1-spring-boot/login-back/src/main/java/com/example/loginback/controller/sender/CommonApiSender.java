@@ -1,8 +1,6 @@
 package com.example.loginback.controller.sender;
 
-import com.example.loginback.dto.TokenInfoDto;
 import com.example.loginback.dto.UserInfoDto;
-import com.example.loginback.exception.EmptyTokenException;
 import com.example.loginback.exception.RequestFailException;
 import com.example.loginback.exception.UserInfoEmptyException;
 import org.springframework.http.HttpStatus;
@@ -14,19 +12,13 @@ import org.springframework.web.client.RestClient;
 import java.util.Map;
 
 @Component
-public class NaverApiSender {
+public class CommonApiSender {
 
-    public TokenInfoDto exchangeToken(String code, String clientId, String clientSecret, String state){
-        String baseUrl = "https://nid.naver.com/oauth2.0/token";
-        String url = baseUrl +
-                "?grant_type=authorization_code&client_id=" + clientId
-                + "&client_secret=" + clientSecret
-                + "&code=" + code
-                + "&state=" + state;
-
+    public UserInfoDto getUserInfo(String userUrl, String accessToken){
         RestClient restClient = RestClient.create();
         ResponseEntity<Map> responseEntity = restClient.get()
-                .uri(url)
+                .uri(userUrl)
+                .header("Authorization", "Bearer " + accessToken)
                 .retrieve()
                 .toEntity(Map.class);
 
@@ -38,14 +30,13 @@ public class NaverApiSender {
         }
 
         assert responseBody != null;
-        String accessToken = (String) responseBody.get("access_token");
-        String expiresIn = (String) responseBody.get("expires_in");
+        String email = (String) responseBody.get("email");
+        String name = (String) responseBody.get("name");
 
-        if (accessToken == null || expiresIn == null) {
-            throw new EmptyTokenException();
+        if (email == null || name == null) {
+            throw new UserInfoEmptyException();
         }
 
-        return new TokenInfoDto(accessToken, expiresIn);
+        return new UserInfoDto(email, name);
     }
-
 }
