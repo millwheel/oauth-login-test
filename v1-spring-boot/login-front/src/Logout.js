@@ -2,6 +2,7 @@ import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import axios from "axios";
 import { useEffect } from "react";
+import { clearCookie } from "./Cookie";
 
 const Logout = ({ setIsAuthenticated }) => {
   const navigate = useNavigate();
@@ -17,6 +18,7 @@ const Logout = ({ setIsAuthenticated }) => {
         toast.success(response.data, {
           toastId: "logoutSuccess1",
         });
+        clearCookie("access_token");
         setIsAuthenticated(false);
         navigate("/");
       })
