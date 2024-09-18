@@ -1,0 +1,145 @@
+
+.header{
+    margin: 10px;
+    display: flex;
+    justify-content: space-between;
+}
+
+.back{
+    margin: 10px;
+    display: flex;
+    justify-content: end;
+}
+
+.intro{
+    color: #818181;
+}
+
+button{
+    border: none;
+    font-family: "Arial Black", serif;
+    font-weight: bold;
+    font-size: 20px;
+    border-radius: 20px;
+    width: 150px;
+    height: 50px;
+}
+
+.submit_button{
+    border: none;
+    color: peachpuff;
+    background-color: #4e94d3;
+    transition: background-color 0.3s ease-in, color 0.3s ease-in;
+}
+
+.submit_button:hover{
+    cursor: pointer;
+    color: lemonchiffon;
+    background-color: #65b1cd;
+}
+
+.login_button{
+    color: #408cce;
+    backgroud-color: white;
+    margin: 10px;
+}
+
+.login_button:hover{
+    cursor: pointer;
+    background-color: #e4e4e4;
+}
+
+.join_button{
+    color: white;
+    background-color: #408cce;
+    margin: 10px;
+}
+
+.join_button:hover{
+    cursor: pointer;
+    background-color: #6daee6;
+}
+
+.body{
+    text-align: center;
+}
+
+.status_text_container{
+    text-align: center;
+    padding-top: 40px;
+    padding-bottom: 40px;
+    margin-top: 40px;
+    margin-bottom: 40px;
+}
+
+@keyframes blink {
+    0% {
+        opacity: 0.5;
+    }
+    100% {
+        opacity: 1;
+    }
+}
+
+.status_text_container h1 {
+    animation: blink 1s infinite alternate;
+}
+
+.frame{
+    display: grid;
+    place-items: center;
+    height: 100vh;
+}
+
+.container{
+    border-radius: 20px;
+    width: 300px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-evenly;
+    align-items: center;
+    background-color: #efde8b;
+    padding: 30px;
+}
+
+.container form{
+    display: flex;
+    flex-direction: column;
+    justify-content: space-evenly;
+    align-items: center;
+}
+
+input{
+    margin: 10px;
+    background-color: rgba(255, 255, 255, 0.63);
+    border: none;
+    border-radius: 10px;
+    font-size: 18px;
+    width: 200px;
+    height: 40px;
+}
+
+input::placeholder {
+    color: #4e94d3;
+    font-size: 16px;
+}
+
+.oauth2_container{
+    margin-top: 20px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-evenly;
+    align-items: center;
+}
+
+.oauth2_button{
+    font-size: 18px;
+    margin: 10px;
+    width: 250px;
+    height: 40px;
+}
+
+.oauth2_button:hover{
+    cursor: pointer;
+}
+
