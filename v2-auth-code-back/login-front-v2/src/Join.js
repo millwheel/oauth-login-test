@@ -1,12 +1,11 @@
 import React, { useState } from "react";
-import axios from "axios";
 import { useNavigate } from "react-router-dom";
-import { toast } from "react-toastify";
 import {
   handelKakaoOAuthLogin,
   handleGoogleOAuthLogin,
   handleNaverOAuthLogin,
 } from "./Oauth_code";
+import {handleEmailJoin} from "./Email_join";
 
 function Join() {
   const [email, setEmail] = useState("");
@@ -16,28 +15,9 @@ function Join() {
   const [error, setError] = useState("");
   const navigate = useNavigate();
 
-  const handleSubmit = async (e) => {
+  const onEmailJoinSubmit = async (e) => {
     e.preventDefault();
-    if (password !== passwordConfirm) {
-      setError("Passwords do not match");
-      return;
-    }
-
-    try {
-      const response = await axios.post("http://localhost:8080/join", {
-        email,
-        name,
-        password,
-      });
-
-      console.log(response.data);
-      toast.success(response.data);
-
-      navigate("/");
-    } catch (error) {
-      setError(error.response?.data);
-      console.error(error.response?.data);
-    }
+    handleEmailJoin(email, name, password, passwordConfirm, setError, navigate)
   };
 
   return (
@@ -45,7 +25,7 @@ function Join() {
       <div className="container">
         <h1>Join format</h1>
         {error && <p style={{ color: "red" }}>{error}</p>}
-        <form onSubmit={handleSubmit}>
+        <form onSubmit={onEmailJoinSubmit}>
           <input
             type="email"
             placeholder="Email"
