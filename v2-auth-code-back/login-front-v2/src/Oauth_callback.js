@@ -1,81 +1,41 @@
-import React, { useEffect, useState } from "react";
-import { useLocation, useNavigate } from "react-router-dom";
+import React, { useEffect } from "react";
 import axios from "axios";
-import { toast } from "react-toastify";
-import { setCookie } from "./Cookie";
+import { useLocation, useNavigate } from "react-router-dom";
 
-function OAuthCallback({ provider, setIsAuthenticated, setEmail, setName }) {
-  const navigate = useNavigate();
+function OAuthCallback() {
   const location = useLocation();
-  const [error, setError] = useState("");
-
-  const handleOAuthCallback = async () => {
-    let url = "";
-    const params = new URLSearchParams(location.search);
-    switch (provider) {
-      case "google":
-        url = getGoogleOAuthCallbackUrl(params);
-        break;
-      case "naver":
-        url = getNaverOAuthCallbackUrl(params);
-        break;
-      case "kakao":
-        url = getKakaoOAuthCallbackUrl(params);
-        break;
-      default:
-        throw new Error("Unsupported OAuth provider");
-    }
-    return await axios.get(url);
-  };
-
-  const getGoogleOAuthCallbackUrl = (params) => {
-    const code = params.get("code");
-    return `http://localhost:8080/oauth/google/token?code=${code}`;
-  };
-
-  const getNaverOAuthCallbackUrl = (params) => {
-    const code = params.get("code");
-    const state = params.get("state");
-    return `http://localhost:8080/oauth/naver/token?code=${code}&state=${state}`;
-  };
-
-  const getKakaoOAuthCallbackUrl = (params) => {
-    const code = params.get("code");
-    return `http://localhost:8080/oauth/kakao/token?code=${code}`;
-  };
+  const navigate = useNavigate();
 
   useEffect(() => {
-    handleOAuthCallback()
-      .then((response) => {
-        const { message, accessToken, expiresIn, email, name } = response.data;
-        toast.success(message, {
-          toastId: "loginSuccess2",
-        });
+    const params = new URLSearchParams(location.search);
+    const code = params.get("code");
 
-        setEmail(email);
-        setName(name);
-        setCookie("access_token", accessToken, expiresIn);
-        setIsAuthenticated(true);
-        navigate("/");
-      })
-      .catch((error) => {
-        setError(error.response?.data);
-        console.error(error.response?.data || error.message);
-      });
-  }, []);
+    if (code) {
+      // Call the backend with the authorization code
+      axios
+          .get(`http://localhost:8080/oauth/google/callback?code=${code}`)
+          .then((response) => {
+            console.log(response.data);
+            const { accessToken, email, name } = response.data;
 
-  return (
-    <div>
-      {error && (
-        <div style={{ color: "red" }}>
-          <p>Error: {error.message || "Unknown error occurred"}</p>
-          <p>Status: {error.status}</p>
-          <p>Timestamp: {error.timestamp}</p>
-        </div>
-      )}
-      <h2>Redirecting..</h2>
-    </div>
-  );
+            // Store token in localStorage or context for later use
+            localStorage.setItem("accessToken", accessToken);
+
+            // Do something with the user info, like updating auth state
+            console.log(`Logged in as ${name} (${email})`);
+
+            // Redirect to the main page or user dashboard
+            navigate("/");
+          })
+          .catch((error) => {
+            console.error("Error during Google login:", error);
+            // Handle login error
+          });
+    }
+  }, [location, navigate]);
+
+  return <div>Processing login...</div>;
 }
 
 export default OAuthCallback;
+
