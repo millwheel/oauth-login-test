@@ -6,7 +6,7 @@ import {
   handelKakaoOAuthLogin,
   handleGoogleOAuthLogin,
   handleNaverOAuthLogin,
-} from "./Oauth_login";
+} from "./Oauth_code";
 
 function Join() {
   const [email, setEmail] = useState("");

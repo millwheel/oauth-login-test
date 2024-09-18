@@ -1,42 +1,64 @@
-export const generateStateToken = () => {
-  return [...Array(30)].map(() => Math.random().toString(36)[2]).join("");
-};
+import axios from "axios";
+import React, {useEffect, useState} from "react";
+import {toast} from "react-toastify";
+import {setCookie} from "./Cookie";
+import {useNavigate} from "react-router-dom";
 
-export const handleGoogleOAuthLogin = (e) => {
-  e.preventDefault();
-  const googleClientId = process.env.REACT_APP_GOOGLE_CLIENT_ID;
-  const googleRedirectUri = process.env.REACT_APP_GOOGLE_REDIRECT_URI;
-  if (!googleClientId || !googleRedirectUri) {
-    console.error("Google Client ID or Redirect URI is missing!");
-    return;
-  }
-  const googleAuthUrl = `https://accounts.google.com/o/oauth2/auth?response_type=code&client_id=${googleClientId}&redirect_uri=${googleRedirectUri}&scope=profile%20email`;
-  window.location.href = googleAuthUrl;
-};
 
-export const handleNaverOAuthLogin = (e) => {
-  e.preventDefault();
-  const naverClientId = process.env.REACT_APP_NAVER_CLIENT_ID;
-  const naverRedirectUri = process.env.REACT_APP_NAVER_REDIRECT_URI;
+function handleOAuthLogin(provider){
+    const navigate = useNavigate();
+    const [error, setError] = useState("");
 
-  if (!naverClientId || !naverRedirectUri) {
-    console.error("Naver Client ID or Redirect URI is missing!");
-    return;
-  }
-  const stateToken = encodeURIComponent(generateStateToken());
-  const naverAuthUrl = `https://nid.naver.com/oauth2.0/authorize?response_type=code&client_id=${naverClientId}&redirect_uri=${naverRedirectUri}&state=${stateToken}`;
-  window.location.href = naverAuthUrl;
-};
+    const handleOAuthCallback = async () => {
+        let url = "";
+        switch (provider) {
+            case "google":
+                url = `http://localhost:8080/oauth2/login/google`;
+                break;
+            case "naver":
+                url = `http://localhost:8080/oauth2/login/naver`;
+                break;
+            case "kakao":
+                url = `http://localhost:8080/oauth2/login/kakao`;
+                break;
+            default:
+                throw new Error("Unsupported OAuth provider");
+        }
+        return await axios.get(url);
+    };
 
-export const handelKakaoOAuthLogin = (e) => {
-  e.preventDefault();
-  const kakaoClientId = process.env.REACT_APP_KAKAO_CLIENT_ID;
-  const kakaoRedirectUri = process.env.REACT_APP_KAKAO_REDIRECT_URI;
+    useEffect(() => {
+        handleOAuthCallback()
+            .then((response) => {
+                const { message, accessToken, expiresIn, email, name } = response.data;
+                toast.success(message, {
+                    toastId: "loginSuccess2",
+                });
 
-  if (!kakaoClientId || !kakaoRedirectUri) {
-    console.error("Kakaos Client ID or Redirect URI is missing!");
-    return;
-  }
-  const kakaoAuthUrl = `https://kauth.kakao.com/oauth/authorize?response_type=code&client_id=${kakaoClientId}&redirect_uri=${kakaoRedirectUri}`;
-  window.location.href = kakaoAuthUrl;
-};
+                setEmail(email);
+                setName(name);
+                setCookie("access_token", accessToken, expiresIn);
+                setIsAuthenticated(true);
+                navigate("/");
+            })
+            .catch((error) => {
+                setError(error.response?.data);
+                console.error(error.response?.data || error.message);
+            });
+    }, []);
+
+    return (
+        <div>
+            {error && (
+                <div style={{ color: "red" }}>
+                    <p>Error: {error.message || "Unknown error occurred"}</p>
+                    <p>Status: {error.status}</p>
+                    <p>Timestamp: {error.timestamp}</p>
+                </div>
+            )}
+            <h2>Redirecting..</h2>
+        </div>
+    );
+}
+
+export default handleOAuthLogin;

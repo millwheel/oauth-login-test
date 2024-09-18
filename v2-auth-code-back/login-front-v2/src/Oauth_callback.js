@@ -8,7 +8,6 @@ function OAuthCallback({ provider, setIsAuthenticated, setEmail, setName }) {
   const navigate = useNavigate();
   const location = useLocation();
   const [error, setError] = useState("");
-  const [requestMade, setRequestMade] = useState(false);
 
   const handleOAuthCallback = async () => {
     let url = "";

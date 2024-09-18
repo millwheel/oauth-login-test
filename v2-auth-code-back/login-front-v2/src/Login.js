@@ -1,12 +1,7 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import axios from "axios";
-import { toast } from "react-toastify";
-import {
-  handelKakaoOAuthLogin,
-  handleGoogleOAuthLogin,
-  handleNaverOAuthLogin,
-} from "./Oauth_login";
+import handleOAuthLogin from "./Oauth_login";
+import {handleEmailLogin} from "./Email_login";
 
 function Login({ setIsAuthenticated }) {
   const [email, setEmail] = useState("");
@@ -14,23 +9,9 @@ function Login({ setIsAuthenticated }) {
   const [error, setError] = useState("");
   const navigate = useNavigate();
 
-  const handleEmailLogin = async (e) => {
+  const onEmailLoginSubmit = (e) => {
     e.preventDefault();
-    try {
-      const response = await axios.post("http://localhost:8080/login", {
-        email,
-        password,
-      });
-
-      console.log(response.data);
-      toast.success(response.data);
-
-      setIsAuthenticated(true);
-      navigate("/");
-    } catch (error) {
-      setError(error.response?.data);
-      console.error(error.response?.data || error.message);
-    }
+    handleEmailLogin(email, password, setIsAuthenticated, setError, navigate);
   };
 
   return (
@@ -38,7 +19,7 @@ function Login({ setIsAuthenticated }) {
       <div className="container">
         <h1>Login format</h1>
         {error && <p style={{ color: "red" }}>{error}</p>}
-        <form onSubmit={handleEmailLogin}>
+        <form onSubmit={onEmailLoginSubmit}>
           <input
             type="email"
             placeholder="Email"
@@ -58,13 +39,13 @@ function Login({ setIsAuthenticated }) {
           </button>
         </form>
         <div className="oauth2_container">
-          <button onClick={handleGoogleOAuthLogin} className="oauth2_button">
+          <button onClick={() => handleOAuthLogin("google")} className="oauth2_button">
             Login with Google
           </button>
-          <button onClick={handleNaverOAuthLogin} className="oauth2_button">
+          <button onClick={() => handleOAuthLogin} className="oauth2_button">
             Login with Naver
           </button>
-          <button onClick={handelKakaoOAuthLogin} className="oauth2_button">
+          <button onClick={() => handleOAuthLogin} className="oauth2_button">
             Login with Kakao
           </button>
         </div>
