@@ -1,15 +1,9 @@
 import axios from "axios";
-import React, {useEffect, useState} from "react";
 import {toast} from "react-toastify";
 import {setCookie} from "./Cookie";
-import {useNavigate} from "react-router-dom";
 
-
-function handleOAuthLogin(provider){
-    const navigate = useNavigate();
-    const [error, setError] = useState("");
-
-    const handleOAuthCallback = async () => {
+function handleOAuthLogin(provider, setIsAuthenticated, setEmail, setName, setError, navigate){
+    const sendRequestOAuth = async () => {
         let url = "";
         switch (provider) {
             case "google":
@@ -27,8 +21,8 @@ function handleOAuthLogin(provider){
         return await axios.get(url);
     };
 
-    useEffect(() => {
-        handleOAuthCallback()
+    try {
+        sendRequestOAuth()
             .then((response) => {
                 const { message, accessToken, expiresIn, email, name } = response.data;
                 toast.success(message, {
@@ -45,20 +39,11 @@ function handleOAuthLogin(provider){
                 setError(error.response?.data);
                 console.error(error.response?.data || error.message);
             });
-    }, []);
+    } catch (error) {
+        setError(error.response?.data);
+        console.error(error.response?.data || error.message);
+    }
 
-    return (
-        <div>
-            {error && (
-                <div style={{ color: "red" }}>
-                    <p>Error: {error.message || "Unknown error occurred"}</p>
-                    <p>Status: {error.status}</p>
-                    <p>Timestamp: {error.timestamp}</p>
-                </div>
-            )}
-            <h2>Redirecting..</h2>
-        </div>
-    );
 }
 
 export default handleOAuthLogin;
