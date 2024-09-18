@@ -3,7 +3,6 @@ import { BrowserRouter, Route, Routes } from "react-router-dom";
 import { useEffect, useState } from "react";
 
 import Login from "./Login";
-import Join from "./Join";
 import Home from "./Home";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
@@ -62,7 +61,6 @@ function App() {
             path="/login"
             element={<Login setIsAuthenticated={setIsAuthenticated} setEmail={setEmail} setName={setName} />}
           />
-          <Route path="/join" element={<Join />} />
           <Route
             path="/logout"
             element={<Logout setIsAuthenticated={setIsAuthenticated} />}
