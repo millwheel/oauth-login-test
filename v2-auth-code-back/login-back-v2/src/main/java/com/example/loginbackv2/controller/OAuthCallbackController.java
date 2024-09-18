@@ -27,7 +27,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/oauth")
 @RequiredArgsConstructor
 @Slf4j
-public class OAuthController {
+public class OAuthCallbackController {
 
     private final OAuthProperties oAuthProperties;
     private final UserService userService;
@@ -35,7 +35,7 @@ public class OAuthController {
     private final NaverApiSender naverApiSender;
     private final KakaoApiSender kakaoApiSender;
 
-    @GetMapping("/google/token")
+    @GetMapping("/oauth/google/callback")
     public ResponseEntity<LoginResponseDto> getGoogleToken(@RequestParam("code") String code){
         String clientId = oAuthProperties.getGoogle().getClientId();
         String clientSecret = oAuthProperties.getGoogle().getClientSecret();
@@ -69,7 +69,7 @@ public class OAuthController {
         return new ResponseEntity<>(loginResponseDto, HttpStatus.OK);
     }
 
-    @GetMapping("/naver/token")
+    @GetMapping("/oauth/naver/callback")
     public ResponseEntity<LoginResponseDto> getNaverToken(@RequestParam("code") String code,
                                                           @RequestParam("state") String state){
         String clientId = oAuthProperties.getNaver().getClientId();
@@ -103,7 +103,7 @@ public class OAuthController {
         return new ResponseEntity<>(loginResponseDto, HttpStatus.OK);
     }
 
-    @GetMapping("/kakao/token")
+    @GetMapping("/oauth/kakao/callback")
     public ResponseEntity<LoginResponseDto> getKakaoToken(@RequestParam("code") String code){
         String clientId = oAuthProperties.getKakao().getClientId();
         String clientSecret = oAuthProperties.getKakao().getClientSecret();
