@@ -12,10 +12,10 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http.authorizeHttpRequests(auth -> auth
-                .requestMatchers("/").permitAll()
+                .requestMatchers("/", "/error", "/favicon.ico").permitAll()
                 .anyRequest().authenticated());
         http.oauth2Login(Customizer.withDefaults());
-        http.logout(Customizer.withDefaults());
+
         return http.build();
     }
 }
