@@ -14,7 +14,8 @@ public class SecurityConfig {
         http.authorizeHttpRequests(auth -> auth
                 .requestMatchers("/", "/error", "/favicon.ico").permitAll()
                 .anyRequest().authenticated());
-        http.oauth2Login(Customizer.withDefaults());
+        http.oauth2Login(oauth2Login ->
+                oauth2Login.defaultSuccessUrl("http://localhost:3000", true));
 
         return http.build();
     }
