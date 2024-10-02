@@ -7,4 +7,5 @@ public enum OAuthProviderType {
     public static OAuthProviderType fromName(String type){
         return OAuthProviderType.valueOf(type);
     }
+
 }
