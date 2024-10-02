@@ -1,4 +1,4 @@
-package com.example.loginback.provider;
+package com.example.loginback.url;
 
 
 import com.example.loginback.config.OAuthProperties;
