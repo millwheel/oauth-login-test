@@ -1,4 +1,6 @@
 spring:
+  thymeleaf:
+    cache: false
   config:
     import: optional:file:local.env[.properties]
   datasource:
