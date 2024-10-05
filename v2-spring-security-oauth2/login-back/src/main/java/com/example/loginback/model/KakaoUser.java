@@ -9,14 +9,14 @@ public class KakaoUser extends OAuth2ProviderUser {
         super(oAuth2User.getAttributes(), oAuth2User, clientRegistration);
     }
 
-    // id와 username 은 제공자 별로 차이가 난다.
+    // TODO You should fill in
     @Override
     public String getId() {
-        return "";
+        return "sample id";
     }
 
     @Override
     public String getUsername() {
-        return "";
+        return "sample username";
     }
 }

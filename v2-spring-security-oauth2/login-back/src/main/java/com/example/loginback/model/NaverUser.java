@@ -3,20 +3,21 @@ package com.example.loginback.model;
 import org.springframework.security.oauth2.client.registration.ClientRegistration;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 
+import java.util.Map;
+
 public class NaverUser extends OAuth2ProviderUser {
 
     public NaverUser(OAuth2User oAuth2User, ClientRegistration clientRegistration) {
-        super(oAuth2User.getAttributes(), oAuth2User, clientRegistration);
+        super((Map<String, Object>) oAuth2User.getAttributes().get("response"), oAuth2User, clientRegistration);
     }
 
-    // id와 username 은 제공자 별로 차이가 난다.
     @Override
     public String getId() {
-        return "";
+        return (String) getAttributes().get("id");
     }
 
     @Override
     public String getUsername() {
-        return "";
+        return (String) getAttributes().get("email");
     }
 }
