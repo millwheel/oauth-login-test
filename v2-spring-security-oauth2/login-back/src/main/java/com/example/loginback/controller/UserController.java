@@ -1,7 +1,9 @@
 package com.example.loginback.controller;
 
+import com.example.loginback.entity.User;
 import com.example.loginback.security.OAuth2UserConverter;
 import com.example.loginback.security.model.ProviderUser;
+import com.example.loginback.service.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -22,6 +24,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class UserController {
 
     private final OAuth2UserConverter oAuth2UserConverter;
+    private final UserService userService;
 
     @GetMapping("/oauth")
     @PreAuthorize("hasAnyRole('OAUTH2_USER', 'OIDC_USER')")
@@ -41,7 +44,7 @@ public class UserController {
 
     @GetMapping("/db")
     @PreAuthorize("hasAnyRole('OAUTH2_USER', 'OIDC_USER')")
-    public OAuth2User dbUser(Authentication authentication,
+    public User dbUser(Authentication authentication,
                            @AuthenticationPrincipal OAuth2User oAuth2User,
                            @AuthenticationPrincipal OidcUser oidcUser) {
         ProviderUser providerUser;
@@ -49,14 +52,16 @@ public class UserController {
         if (authentication instanceof OAuth2AuthenticationToken authenticationToken){
             String clientRegistrationId = authenticationToken.getAuthorizedClientRegistrationId();
             if (oidcUser != null) {
-                oAuth2UserConverter.constructProviderUserFromOAuth2User(clientRegistrationId, oidcUser);
+                providerUser = oAuth2UserConverter.constructProviderUserFromOAuth2User(clientRegistrationId, oidcUser);
             } else if (oAuth2User != null) {
-                oAuth2UserConverter.constructProviderUserFromOAuth2User(clientRegistrationId, oAuth2User);
+                providerUser = oAuth2UserConverter.constructProviderUserFromOAuth2User(clientRegistrationId, oAuth2User);
+            } else {
+                log.info("No authenticated user found.");
+                throw new RuntimeException("No authenticated user found.");
             }
+            return userService.getUser(providerUser.getId());
         }
 
-
-        log.info("No authenticated user found.");
-        throw new RuntimeException("No authenticated user found.");
+        throw new RuntimeException("No authentication or wrong authentication type");
     }
 }
