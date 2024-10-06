@@ -1,11 +1,8 @@
 package com.example.loginback.security;
 
 import com.example.loginback.security.model.ProviderUser;
-import com.example.loginback.repository.UserRepository;
-import com.example.loginback.service.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.security.oauth2.client.registration.ClientRegistration;
 import org.springframework.security.oauth2.client.userinfo.DefaultOAuth2UserService;
 import org.springframework.security.oauth2.client.userinfo.OAuth2UserRequest;
 import org.springframework.security.oauth2.client.userinfo.OAuth2UserService;
