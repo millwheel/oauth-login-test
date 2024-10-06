@@ -32,11 +32,6 @@ public abstract class OAuth2ProviderUser implements ProviderUser {
     }
 
     @Override
-    public String getName() {
-        return (String) getAttributes().get("name");
-    }
-
-    @Override
     public String getProvider() {
         return clientRegistration.getRegistrationId();
     }
@@ -51,5 +46,9 @@ public abstract class OAuth2ProviderUser implements ProviderUser {
     @Override
     public Map<String, Object> getAttributes() {
         return attributes;
+    }
+
+    public OAuth2User getOAuth2User() {
+        return oAuth2User;
     }
 }
