@@ -14,14 +14,14 @@ import org.springframework.web.bind.annotation.RestController;
 public class UserController {
 
     @GetMapping("/api/user")
-    @PreAuthorize("hasAnyRole('SCOPE_profile', 'SCOPE_email')")
+    @PreAuthorize("hasAnyRole('OAUTH2_USER')")
     public Authentication user(Authentication authentication, @AuthenticationPrincipal OAuth2User oAuth2User) {
         log.info("authentication = {}, oAuth2User = {}", authentication, oAuth2User);
         return authentication;
     }
 
     @GetMapping("/api/oidc") // 요청시 scope 에 openid 가 포함되어야 oidcUser 가 생성된다
-    @PreAuthorize("hasAnyRole('SCOPE_openid')")
+    @PreAuthorize("hasAnyRole('OIDC_USER')")
     public Authentication oidc(Authentication authentication, @AuthenticationPrincipal OidcUser oidcUser) {
         log.info("authentication = {}, oidcUser = {}", authentication, oidcUser);
         return authentication;

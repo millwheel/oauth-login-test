@@ -17,7 +17,44 @@
         <h2>어서오세요. 당신은 로그인 되었습니다.</h2>
         <p>email: <span th:text="${email}"></span></p>
         <p>name: <span th:text="${name}"></span></p>
+
+        <h3>인증 정보 가져오기</h3>
+        <button id="oauth2-info-btn" class="btn">OAuth2 인증정보</button>
+        <button id="oidc-info-btn" class="btn">OpenId Connect 인증정보</button>
+
+        <div id="result"></div>
+
+        <br>
         <a href="/logout" class="btn">로그아웃</a>
     </div>
+
+    <script>
+        function fetchAuthInfo(url) {
+            fetch(url)
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('네트워크 응답이 정상적이지 않습니다.');
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    // JSON 데이터를 HTML로 출력
+                    document.getElementById('result').innerHTML = '<pre>' + JSON.stringify(data, null, 4) + '</pre>';
+                })
+                .catch(error => {
+                    document.getElementById('result').innerHTML = '<p>인증 정보를 가져오는데 실패했습니다.</p>';
+                });
+        }
+
+        // OAuth2 인증정보 버튼 이벤트 핸들러
+        document.getElementById('oauth2-info-btn').addEventListener('click', function() {
+            fetchAuthInfo('/api/user');
+        });
+
+        // OIDC 인증정보 버튼 이벤트 핸들러
+        document.getElementById('oidc-info-btn').addEventListener('click', function() {
+            fetchAuthInfo('/api/oidc');
+        });
+    </script>
 </body>
 </html>
