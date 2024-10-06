@@ -42,8 +42,7 @@ public abstract class AbstractOAuth2UserService {
     }
 
     public void register(ProviderUser providerUser) {
-        Optional<User> user = userService.getUser(providerUser.getUsername());
-        if (user.isEmpty()) {
+        if (!userService.isExist(providerUser.getId())){
             userService.AddUser(providerUser);
         }
     }

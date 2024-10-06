@@ -16,7 +16,7 @@ public class User {
     @Id
     @GeneratedValue
     private Long id;
-    private String idFromProvider;
+    private String pid;
     private String username;
     private String password;
     private String provider;
@@ -28,7 +28,7 @@ public class User {
     private List<String> authorities;
 
     public User(ProviderUser providerUser) {
-        this.idFromProvider = providerUser.getId();
+        this.pid = providerUser.getId();
         this.username = providerUser.getUsername();
         this.password = providerUser.getPassword();
         this.provider = providerUser.getProvider();

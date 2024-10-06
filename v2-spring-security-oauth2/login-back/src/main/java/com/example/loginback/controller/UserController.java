@@ -7,27 +7,43 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.oauth2.core.oidc.user.OidcUser;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @Slf4j
 @RestController
+@RequestMapping("/users")
 public class UserController {
 
-    @GetMapping("/api/user")
+    @GetMapping("/oauth")
     @PreAuthorize("hasAnyRole('OAUTH2_USER', 'OIDC_USER')")
-    public Authentication user(Authentication authentication,
+    public OAuth2User oauth2user(Authentication authentication,
                                @AuthenticationPrincipal OAuth2User oAuth2User,
                                @AuthenticationPrincipal OidcUser oidcUser) {
         if (oidcUser != null) {
-            // OIDC 사용자 정보 로그
             log.info("OIDC user authenticated. Authentication = {}, OidcUser = {}", authentication, oidcUser);
+            return oidcUser;
         } else if (oAuth2User != null) {
-            // OAuth2 사용자 정보 로그
             log.info("OAuth2 user authenticated. Authentication = {}, OAuth2User = {}", authentication, oAuth2User);
-        } else {
-            // 사용자 인증 정보가 없을 경우
-            log.info("No authenticated user found.");
+            return oAuth2User;
         }
-        return authentication;
+        log.info("No authenticated user found.");
+        throw new RuntimeException("No authenticated user found.");
+    }
+
+    @GetMapping("/db")
+    @PreAuthorize("hasAnyRole('OAUTH2_USER', 'OIDC_USER')")
+    public OAuth2User dbUser(Authentication authentication,
+                           @AuthenticationPrincipal OAuth2User oAuth2User,
+                           @AuthenticationPrincipal OidcUser oidcUser) {
+        if (oidcUser != null) {
+            log.info("OIDC user authenticated. Authentication = {}, OidcUser = {}", authentication, oidcUser);
+            return oidcUser;
+        } else if (oAuth2User != null) {
+            log.info("OAuth2 user authenticated. Authentication = {}, OAuth2User = {}", authentication, oAuth2User);
+            return oAuth2User;
+        }
+        log.info("No authenticated user found.");
+        throw new RuntimeException("No authenticated user found.");
     }
 }
