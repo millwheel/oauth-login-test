@@ -36,9 +36,11 @@ spring:
             client-id: ${KAKAO_CLIENT_ID}
             client-secret: ${KAKAO_CLIENT_SECRET}
             client-name: Kakao
+            # Below property is essential in case of kakao login
+            client-authentication-method: client_secret_post
             authorization-grant-type: authorization_code
-            scope: profile, email
             redirect-uri: http://localhost:8080/login/oauth2/code/kakao
+            scope: profile_nickname
 
         provider:
           # There is no need to add google provider, Spring security configure the uri automatically.
@@ -51,4 +53,7 @@ spring:
             authorization-uri: https://kauth.kakao.com/oauth/authorize
             token-uri: https://kauth.kakao.com/oauth/token
             user-info-uri: https://kapi.kakao.com/v2/user/me
-            user-name-attribute: kakao_account
+            user-name-attribute: id
+logging:
+  level:
+    org.springframework.security: DEBUG
