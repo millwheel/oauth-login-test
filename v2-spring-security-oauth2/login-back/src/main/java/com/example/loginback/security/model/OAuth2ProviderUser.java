@@ -2,7 +2,6 @@ package com.example.loginback.security.model;
 
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.oauth2.client.registration.ClientRegistration;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 
 import java.util.List;
@@ -13,12 +12,12 @@ public abstract class OAuth2ProviderUser implements ProviderUser {
 
     private Map<String, Object> attributes;
     private OAuth2User oAuth2User;
-    private ClientRegistration clientRegistration;
+    private String registrationId;
 
-    public OAuth2ProviderUser(Map<String, Object> attributes, OAuth2User oAuth2User, ClientRegistration clientRegistration) {
+    public OAuth2ProviderUser(Map<String, Object> attributes, OAuth2User oAuth2User, String registrationId) {
         this.attributes = attributes;
         this.oAuth2User = oAuth2User;
-        this.clientRegistration = clientRegistration;
+        this.registrationId = registrationId;
     }
 
     @Override
@@ -33,7 +32,7 @@ public abstract class OAuth2ProviderUser implements ProviderUser {
 
     @Override
     public String getProvider() {
-        return clientRegistration.getRegistrationId();
+        return registrationId;
     }
 
     @Override

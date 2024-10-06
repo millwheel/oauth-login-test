@@ -26,8 +26,8 @@ public class CustomOAuth2UserService implements OAuth2UserService<OAuth2UserRequ
         OAuth2User oAuth2User = oAuth2UserService.loadUser(userRequest);
 
         // --- Delete this code block if you don't need the saving the user into Database ---
-        ClientRegistration clientRegistration = userRequest.getClientRegistration();
-        ProviderUser providerUser = oAuth2UserConverter.constructProviderUserFromOAuth2User(clientRegistration, oAuth2User);
+        String registrationId = userRequest.getClientRegistration().getRegistrationId();
+        ProviderUser providerUser = oAuth2UserConverter.constructProviderUserFromOAuth2User(registrationId, oAuth2User);
         oAuth2UserConverter.register(providerUser);
         // -----------------------------------------------------------------------------------
 

@@ -24,8 +24,8 @@ public class CustomOidcUserService implements OAuth2UserService<OidcUserRequest,
         OidcUser oidcUser = oidcUserService.loadUser(userRequest);
 
         // --- Delete this code block if you don't need the saving the user into Database ---
-        ClientRegistration clientRegistration = userRequest.getClientRegistration();
-        ProviderUser providerUser = oAuth2UserConverter.constructProviderUserFromOAuth2User(clientRegistration, oidcUser);
+        String registrationId = userRequest.getClientRegistration().getRegistrationId();
+        ProviderUser providerUser = oAuth2UserConverter.constructProviderUserFromOAuth2User(registrationId, oidcUser);
         oAuth2UserConverter.register(providerUser);
         // -----------------------------------------------------------------------------------
 
