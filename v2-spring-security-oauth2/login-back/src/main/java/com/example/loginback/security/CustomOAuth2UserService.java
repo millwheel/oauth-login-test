@@ -28,7 +28,7 @@ public class CustomOAuth2UserService extends AbstractOAuth2UserService implement
         // --- Delete this code block if you don't need the saving the user into Database ---
         ClientRegistration clientRegistration = userRequest.getClientRegistration();
         ProviderUser providerUser = super.constructProviderUserFromOAuth2User(clientRegistration, oAuth2User);
-        super.register(clientRegistration, providerUser);
+        super.register(providerUser);
         // -----------------------------------------------------------------------------------
 
         return oAuth2User;

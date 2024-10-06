@@ -18,8 +18,8 @@ public class UserService {
         return userRepository.findByUsername(username);
     }
 
-    public void AddUser(String registrationId, ProviderUser providerUser) {
-        User user = new User(registrationId, providerUser);
+    public void AddUser(ProviderUser providerUser) {
+        User user = new User(providerUser);
         userRepository.save(user);
     }
 }

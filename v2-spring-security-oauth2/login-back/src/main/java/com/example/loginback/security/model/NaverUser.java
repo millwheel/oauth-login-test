@@ -20,4 +20,5 @@ public class NaverUser extends OAuth2ProviderUser {
     public String getUsername() {
         return (String) getAttributes().get("email");
     }
+
 }

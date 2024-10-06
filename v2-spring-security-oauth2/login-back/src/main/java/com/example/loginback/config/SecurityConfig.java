@@ -9,6 +9,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 
+import org.springframework.security.config.annotation.web.configurers.HeadersConfigurer;
 import org.springframework.security.core.authority.mapping.GrantedAuthoritiesMapper;
 import org.springframework.security.web.SecurityFilterChain;
 
@@ -24,7 +25,7 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http.authorizeHttpRequests(auth -> auth
-                .requestMatchers("/", "/login", "/css/**", "/js/**", "/images/**", "/oauth2/**").permitAll()
+                .requestMatchers("/", "/login", "/h2-console/**", "/error/**").permitAll()
                 .anyRequest().authenticated());
         http.oauth2Login(oauth2 -> oauth2
                 .userInfoEndpoint(userInfoEndpointConfig -> userInfoEndpointConfig
@@ -33,6 +34,11 @@ public class SecurityConfig {
         http.logout(logout -> logout
                 .logoutSuccessUrl("/")
                 .permitAll());
+        // Allow the user access to the h2 console. Both below code is essential
+        http.csrf(csrf -> csrf
+                .ignoringRequestMatchers("/h2-console/**"));
+        http.headers(headers -> headers
+                .frameOptions(HeadersConfigurer.FrameOptionsConfig::sameOrigin));
         return http.build();
     }
 

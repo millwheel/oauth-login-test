@@ -28,7 +28,7 @@ public class CustomOidcUserService extends AbstractOAuth2UserService implements 
         // --- Delete this code block if you don't need the saving the user into Database ---
         ClientRegistration clientRegistration = userRequest.getClientRegistration();
         ProviderUser providerUser = super.constructProviderUserFromOAuth2User(clientRegistration, oidcUser);
-        super.register(clientRegistration, providerUser);
+        super.register(providerUser);
         // -----------------------------------------------------------------------------------
 
         return oidcUser;

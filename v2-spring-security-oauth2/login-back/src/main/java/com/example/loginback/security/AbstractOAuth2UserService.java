@@ -41,10 +41,10 @@ public abstract class AbstractOAuth2UserService {
         }
     }
 
-    public void register(ClientRegistration clientRegistration, ProviderUser providerUser) {
+    public void register(ProviderUser providerUser) {
         Optional<User> user = userService.getUser(providerUser.getUsername());
         if (user.isEmpty()) {
-            userService.AddUser(clientRegistration.getRegistrationId(), providerUser);
+            userService.AddUser(providerUser);
         }
     }
 }

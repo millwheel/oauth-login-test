@@ -9,6 +9,7 @@ public interface ProviderUser {
     String getUsername();
     String getPassword();
     String getEmail();
+    String getName();
     String getProvider();
     List<? extends GrantedAuthority> getAuthorities();
     Map<String, Object> getAttributes();

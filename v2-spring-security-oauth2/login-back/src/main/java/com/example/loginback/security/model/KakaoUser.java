@@ -17,9 +17,10 @@ public class KakaoUser extends OAuth2ProviderUser {
         return (String) getAttributes().get("id");
     }
 
+    // TODO Enroll the Kakao App to biz app in Kakao Developer to activate the email and name
     @Override
     public String getUsername() {
-        // TODO Activate the username of Kakao OAuth
-        return "sample username";
+        return "sample email";
     }
+
 }
