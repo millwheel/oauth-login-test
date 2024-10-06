@@ -8,32 +8,21 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 
-public class CustomAuthorityMapper implements GrantedAuthoritiesMapper {
+import static com.example.loginback.security.AuthorityFormatter.trimAuthorityString;
 
-    private String prefix = "ROLE_";
+public class CustomAuthorityMapper implements GrantedAuthoritiesMapper {
 
     @Override
     public Collection<? extends GrantedAuthority> mapAuthorities(Collection<? extends GrantedAuthority> authorities) {
 
         Set<GrantedAuthority> set = new HashSet<>(authorities.size());
         for (GrantedAuthority grantedAuthority : authorities) {
-            set.add(formatAuthority(grantedAuthority.getAuthority()));
+            String authorityString = trimAuthorityString(grantedAuthority.getAuthority());
+            set.add(new SimpleGrantedAuthority(authorityString));
         }
 
         return set;
     }
 
-    private GrantedAuthority formatAuthority(String name) {
 
-        if (name.lastIndexOf(".") > 0){
-            int index = name.lastIndexOf(".");
-            name = "SCOPE_" + name.substring(index + 1);
-        }
-
-        if (prefix.length() > 0 && !name.startsWith(prefix)){
-            name = prefix + name;
-        }
-
-        return new SimpleGrantedAuthority(name);
-    }
 }

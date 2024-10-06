@@ -1,16 +1,20 @@
 package com.example.loginback.entity;
 
+import com.example.loginback.security.AuthorityFormatter;
 import com.example.loginback.security.model.ProviderUser;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.springframework.security.core.GrantedAuthority;
 
 import java.util.*;
+
+import static java.util.stream.Collectors.toList;
 
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Table(name = "users")
+@Getter
 public class User {
 
     @Id
@@ -35,7 +39,7 @@ public class User {
         this.email = providerUser.getEmail();
         this.name = providerUser.getName();
         this.authorities = providerUser.getAuthorities().stream()
-                .map(GrantedAuthority::getAuthority)
+                .map(authority -> AuthorityFormatter.trimAuthorityString(authority.getAuthority()))
                 .toList();;
     }
 }

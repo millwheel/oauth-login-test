@@ -1,5 +1,6 @@
 package com.example.loginback.controller;
 
+import com.example.loginback.dto.UserResponseDto;
 import com.example.loginback.entity.User;
 import com.example.loginback.security.OAuth2UserConverter;
 import com.example.loginback.security.model.ProviderUser;
@@ -44,9 +45,9 @@ public class UserController {
 
     @GetMapping("/db")
     @PreAuthorize("hasAnyRole('OAUTH2_USER', 'OIDC_USER')")
-    public User dbUser(Authentication authentication,
-                           @AuthenticationPrincipal OAuth2User oAuth2User,
-                           @AuthenticationPrincipal OidcUser oidcUser) {
+    public UserResponseDto dbUser(Authentication authentication,
+                                  @AuthenticationPrincipal OAuth2User oAuth2User,
+                                  @AuthenticationPrincipal OidcUser oidcUser) {
         ProviderUser providerUser;
 
         if (authentication instanceof OAuth2AuthenticationToken authenticationToken){
@@ -59,7 +60,8 @@ public class UserController {
                 log.info("No authenticated user found.");
                 throw new RuntimeException("No authenticated user found.");
             }
-            return userService.getUser(providerUser.getId());
+            User user = userService.getUser(providerUser.getId());
+            return new UserResponseDto(user);
         }
 
         throw new RuntimeException("No authentication or wrong authentication type");
