@@ -1,18 +1,20 @@
-package com.example.loginback.service;
+package com.example.loginback.security;
 
 import com.example.loginback.entity.User;
-import com.example.loginback.model.GoogleUser;
-import com.example.loginback.model.KakaoUser;
-import com.example.loginback.model.NaverUser;
-import com.example.loginback.model.ProviderUser;
+import com.example.loginback.security.model.GoogleUser;
+import com.example.loginback.security.model.KakaoUser;
+import com.example.loginback.security.model.NaverUser;
+import com.example.loginback.security.model.ProviderUser;
 import com.example.loginback.repository.UserRepository;
+import com.example.loginback.service.UserService;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.oauth2.client.registration.ClientRegistration;
-import org.springframework.security.oauth2.client.userinfo.OAuth2UserRequest;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Service;
+
+import java.util.Optional;
 
 @Service
 @Getter
@@ -23,7 +25,7 @@ public abstract class AbstractOAuth2UserService {
     private final UserRepository userRepository;
     private final UserService userService;
 
-    public ProviderUser getProviderUserByProvider(ClientRegistration clientRegistration, OAuth2User oAuth2User) {
+    public ProviderUser constructProviderUserFromOAuth2User(ClientRegistration clientRegistration, OAuth2User oAuth2User) {
         String registrationId = clientRegistration.getRegistrationId();
         switch (registrationId) {
             case "google" -> {
@@ -39,10 +41,10 @@ public abstract class AbstractOAuth2UserService {
         }
     }
 
-    public void register(ProviderUser providerUser, OAuth2UserRequest userRequest) {
-        User user = userRepository.findByUsername(providerUser.getUsername());
-        if (user == null){
-            userService.register(userRequest.getClientRegistration().getRegistrationId(), providerUser);
+    public void register(ClientRegistration clientRegistration, ProviderUser providerUser) {
+        Optional<User> user = userService.getUser(providerUser.getUsername());
+        if (user.isEmpty()) {
+            userService.AddUser(clientRegistration.getRegistrationId(), providerUser);
         }
     }
 }

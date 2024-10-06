@@ -1,4 +1,4 @@
-package com.example.loginback.model;
+package com.example.loginback.security.model;
 
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;

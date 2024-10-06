@@ -1,10 +1,12 @@
 package com.example.loginback.service;
 
 import com.example.loginback.entity.User;
-import com.example.loginback.model.ProviderUser;
+import com.example.loginback.security.model.ProviderUser;
 import com.example.loginback.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -12,15 +14,12 @@ public class UserService {
 
     private final UserRepository userRepository;
 
-    public void register(String registrationId, ProviderUser providerUser) {
-        User user = User.builder().registrationId(registrationId)
-                .id(providerUser.getId())
-                .username(providerUser.getUsername())
-                .password(providerUser.getPassword())
-                .email(providerUser.getEmail())
-                .authorities(providerUser.getAuthorities())
-                .build();
+    public Optional<User> getUser(String username){
+        return userRepository.findByUsername(username);
+    }
 
-        userRepository.register(user);
+    public void AddUser(String registrationId, ProviderUser providerUser) {
+        User user = new User(registrationId, providerUser);
+        userRepository.save(user);
     }
 }

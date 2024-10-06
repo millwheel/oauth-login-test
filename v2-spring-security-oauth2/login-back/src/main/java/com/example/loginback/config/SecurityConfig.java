@@ -1,7 +1,8 @@
 package com.example.loginback.config;
 
-import com.example.loginback.service.CustomOAuth2UserService;
-import com.example.loginback.service.CustomOidcUserService;
+import com.example.loginback.security.CustomAuthorityMapper;
+import com.example.loginback.security.CustomOAuth2UserService;
+import com.example.loginback.security.CustomOidcUserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

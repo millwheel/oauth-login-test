@@ -1,7 +1,8 @@
-package com.example.loginback.service;
+package com.example.loginback.security;
 
-import com.example.loginback.model.ProviderUser;
+import com.example.loginback.security.model.ProviderUser;
 import com.example.loginback.repository.UserRepository;
+import com.example.loginback.service.UserService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.oauth2.client.oidc.userinfo.OidcUserRequest;
 import org.springframework.security.oauth2.client.oidc.userinfo.OidcUserService;
@@ -21,14 +22,14 @@ public class CustomOidcUserService extends AbstractOAuth2UserService implements 
 
     @Override
     public OidcUser loadUser(OidcUserRequest userRequest) throws OAuth2AuthenticationException {
-        ClientRegistration clientRegistration = userRequest.getClientRegistration();
         OAuth2UserService<OidcUserRequest, OidcUser> oidcUserService = new OidcUserService();
         OidcUser oidcUser = oidcUserService.loadUser(userRequest);
-        ProviderUser providerUser = super.getProviderUserByProvider(clientRegistration, oidcUser);
-        log.info("providerUser: {}, username:{}, email:{}", providerUser, providerUser.getUsername(), providerUser.getEmail());
 
-        // sign up
-        super.register(providerUser, userRequest);
+        // --- Delete this code block if you don't need the saving the user into Database ---
+        ClientRegistration clientRegistration = userRequest.getClientRegistration();
+        ProviderUser providerUser = super.constructProviderUserFromOAuth2User(clientRegistration, oidcUser);
+        super.register(clientRegistration, providerUser);
+        // -----------------------------------------------------------------------------------
 
         return oidcUser;
     }

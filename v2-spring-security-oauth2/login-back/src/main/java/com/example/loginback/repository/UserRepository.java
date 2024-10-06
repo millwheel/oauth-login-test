@@ -1,26 +1,11 @@
 package com.example.loginback.repository;
 
 import com.example.loginback.entity.User;
-import org.springframework.stereotype.Repository;
+import org.springframework.data.jpa.repository.JpaRepository;
 
-import java.util.*;
+import java.util.Optional;
 
-@Repository
-public class UserRepository {
+public interface UserRepository extends JpaRepository<User, Long> {
 
-    private final Map<String, Object> users = new HashMap<>();
-
-    public User findByUsername(String username) {
-        if (users.containsKey(username)) {
-            return (User) users.get(username);
-        }
-        return null;
-    }
-
-    public void register(User user) {
-        if (users.containsKey(user.getUsername())) {
-            return;
-        }
-        users.put(user.getUsername(), user);
-    }
+    Optional<User> findByUsername(String username);
 }

@@ -1,4 +1,4 @@
-package com.example.loginback.config;
+package com.example.loginback.security;
 
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;

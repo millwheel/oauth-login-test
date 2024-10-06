@@ -1,4 +1,4 @@
-package com.example.loginback.model;
+package com.example.loginback.security.model;
 
 
 import org.springframework.security.oauth2.client.registration.ClientRegistration;

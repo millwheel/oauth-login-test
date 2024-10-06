@@ -1,7 +1,8 @@
-package com.example.loginback.service;
+package com.example.loginback.security;
 
-import com.example.loginback.model.ProviderUser;
+import com.example.loginback.security.model.ProviderUser;
 import com.example.loginback.repository.UserRepository;
+import com.example.loginback.service.UserService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.oauth2.client.registration.ClientRegistration;
 import org.springframework.security.oauth2.client.userinfo.DefaultOAuth2UserService;
@@ -21,14 +22,14 @@ public class CustomOAuth2UserService extends AbstractOAuth2UserService implement
 
     @Override
     public OAuth2User loadUser(OAuth2UserRequest userRequest) throws OAuth2AuthenticationException {
-        ClientRegistration clientRegistration = userRequest.getClientRegistration();
         OAuth2UserService<OAuth2UserRequest, OAuth2User> oAuth2UserService = new DefaultOAuth2UserService();
         OAuth2User oAuth2User = oAuth2UserService.loadUser(userRequest);
-        ProviderUser providerUser = super.getProviderUserByProvider(clientRegistration, oAuth2User);
-        log.info("providerUser: {}, provider username:{}", providerUser, providerUser.getUsername());
 
-        // sign up
-        super.register(providerUser, userRequest);
+        // --- Delete this code block if you don't need the saving the user into Database ---
+        ClientRegistration clientRegistration = userRequest.getClientRegistration();
+        ProviderUser providerUser = super.constructProviderUserFromOAuth2User(clientRegistration, oAuth2User);
+        super.register(clientRegistration, providerUser);
+        // -----------------------------------------------------------------------------------
 
         return oAuth2User;
     }
