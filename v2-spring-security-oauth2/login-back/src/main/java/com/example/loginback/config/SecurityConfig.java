@@ -10,6 +10,7 @@ import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer;
+import org.springframework.security.core.authority.mapping.GrantedAuthoritiesMapper;
 import org.springframework.security.web.SecurityFilterChain;
 
 @Configuration
@@ -40,6 +41,11 @@ public class SecurityConfig {
                 .logoutSuccessUrl("/")
                 .permitAll());
         return http.build();
+    }
+
+    @Bean
+    public GrantedAuthoritiesMapper customAuthoritiesMapper() {
+        return new CustomAuthorityMapper();
     }
 
 }
