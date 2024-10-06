@@ -24,14 +24,14 @@ spring:
             client-id: ${GOOGLE_CLIENT_ID}
             client-secret: ${GOOGLE_CLIENT_SECRET}
             scope: profile, email, openid
-            redirect-uri: http://localhost:8080/login/oauth2/code/google
+            redirect-uri: ${GOOGLE_REDIRECT_URL}
           naver:
             client-id: ${NAVER_CLIENT_ID}
             client-secret: ${NAVER_CLIENT_SECRET}
             client-name: Naver
             authorization-grant-type: authorization_code
             scope: profile, email
-            redirect-uri: http://localhost:8080/login/oauth2/code/naver
+            redirect-uri: ${NAVER_REDIRECT_URL}
           kakao:
             client-id: ${KAKAO_CLIENT_ID}
             client-secret: ${KAKAO_CLIENT_SECRET}
@@ -39,7 +39,7 @@ spring:
             # Below property is essential in case of kakao login
             client-authentication-method: client_secret_post
             authorization-grant-type: authorization_code
-            redirect-uri: http://localhost:8080/login/oauth2/code/kakao
+            redirect-uri: ${KAKAO_REDIRECT_URL}
             scope: profile_nickname
 
         provider:
