@@ -14,23 +14,6 @@ import java.util.Map;
 @Controller
 public class HomeController {
 
-//    @GetMapping("/")
-//    public String index(Model model, Authentication authentication, @AuthenticationPrincipal OAuth2User oAuth2User){
-//        OAuth2AuthenticationToken authenticationToken = (OAuth2AuthenticationToken)authentication;
-//        if (authenticationToken != null){
-//            Map<String, Object> attributes = oAuth2User.getAttributes();
-//            String userName = (String)attributes.get("name");
-//
-//            if(authenticationToken.getAuthorizedClientRegistrationId().equals("naver")){
-//                Map<String, Object> response = (Map)attributes.get("response");
-//                userName = (String)response.get("name");
-//            }
-//
-//            model.addAttribute("user", userName);
-//        }
-//        return "index";
-//    }
-
     @GetMapping("/")
     public String home(Authentication authentication, Model model) {
         if (authentication == null) {
@@ -59,11 +42,6 @@ public class HomeController {
         model.addAttribute("email", email);
         model.addAttribute("name", name);
         return "home";
-    }
-
-    @GetMapping("/login")
-    public String loginPage() {
-        return "login";
     }
 
 }
