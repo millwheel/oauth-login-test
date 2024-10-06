@@ -23,18 +23,22 @@ public class HomeController {
         String email = null;
         String name = null;
 
-        OAuth2AuthenticationToken authenticationToken = (OAuth2AuthenticationToken) authentication;
-
         if (authentication.getPrincipal() instanceof OAuth2User oAuth2User) {
             email = oAuth2User.getAttribute("email");
             name = oAuth2User.getAttribute("name");
 
+            OAuth2AuthenticationToken authenticationToken = (OAuth2AuthenticationToken) authentication;
             Map<String, Object> attributes = oAuth2User.getAttributes();
             if (authenticationToken.getAuthorizedClientRegistrationId().equals("naver")){
                 Map<String, Object> response = (Map)attributes.get("response");
                 email = (String) response.get("email");
                 name = (String) response.get("name");
+            } else if (authenticationToken.getAuthorizedClientRegistrationId().equals("kakao")) {
+                Map<String, Object> kakaoAccount = (Map)attributes.get("kakao_account");
+                Map<String, Object> profile = (Map) kakaoAccount.get("profile");
+                name = (String) profile.get("nickname");
             }
+
             log.info("email: {}, name: {}", email, name);
 
         }
