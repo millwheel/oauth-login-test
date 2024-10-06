@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>홈페이지</title>
+</head>
+<body>
+    <!-- 로그인되지 않은 상태 -->
+    <div sec:authorize="isAnonymous()">
+        <h2>로그인 해주세요</h2>
+        <a href="/login" class="btn">로그인</a>
+    </div>
+
+    <!-- 로그인된 상태 -->
+    <div sec:authorize="isAuthenticated()">
+        <h2>어서오세요. 당신은 로그인 되었습니다.</h2>
+        <p>email: <span th:text="${email}"></span></p>
+        <p>name: <span th:text="${name}"></span></p>
+        <a href="/logout" class="btn">로그아웃</a>
+    </div>
+</body>
+</html>

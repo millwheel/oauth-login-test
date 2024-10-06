@@ -26,12 +26,17 @@ public abstract class AbstractOAuth2UserService {
     public ProviderUser getProviderUserByProvider(ClientRegistration clientRegistration, OAuth2User oAuth2User) {
         String registrationId = clientRegistration.getRegistrationId();
         switch (registrationId) {
-            case "google" -> new GoogleUser(oAuth2User, clientRegistration);
-            case "naver" -> new NaverUser(oAuth2User, clientRegistration);
-            case "kakao" -> new KakaoUser(oAuth2User, clientRegistration);
+            case "google" -> {
+                return new GoogleUser(oAuth2User, clientRegistration);
+            }
+            case "naver" -> {
+                return new NaverUser(oAuth2User, clientRegistration);
+            }
+            case "kakao" -> {
+                return new KakaoUser(oAuth2User, clientRegistration);
+            }
             default -> throw new RuntimeException("Unsupported registration id " + registrationId);
         }
-        return null;
     }
 
     public void register(ProviderUser providerUser, OAuth2UserRequest userRequest) {
@@ -39,6 +44,5 @@ public abstract class AbstractOAuth2UserService {
         if (user == null){
             userService.register(userRequest.getClientRegistration().getRegistrationId(), providerUser);
         }
-        log.info("user: {}", user);
     }
 }

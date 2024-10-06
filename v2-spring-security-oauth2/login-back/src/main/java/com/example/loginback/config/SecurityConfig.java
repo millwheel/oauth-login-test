@@ -22,16 +22,16 @@ public class SecurityConfig {
     private final CustomOidcUserService customOidcUserService;
 
     // static 파일을 보안체크 하지 않도록 하는 설정들. 추후 프론트 구현 후에 제거할 것
-    @Bean
-    public WebSecurityCustomizer webSecurityCustomizer() {
-        return (web) -> web.ignoring()
-                .requestMatchers("/static/js/**", "/static/images/**", "/static/css/**","/static/scss/**");
-    }
+//    @Bean
+//    public WebSecurityCustomizer webSecurityCustomizer() {
+//        return (web) -> web.ignoring()
+//                .requestMatchers("/static/js/**", "/static/images/**", "/static/css/**","/static/scss/**");
+//    }
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http.authorizeHttpRequests(auth -> auth
-                .requestMatchers("/").permitAll()
+                .requestMatchers("/", "/login", "/css/**", "/js/**", "/images/**", "/oauth2/**").permitAll()
                 .anyRequest().authenticated());
         http.oauth2Login(oauth2 -> oauth2
                 .userInfoEndpoint(userInfoEndpointConfig -> userInfoEndpointConfig
