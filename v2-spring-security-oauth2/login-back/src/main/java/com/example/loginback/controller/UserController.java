@@ -14,16 +14,20 @@ import org.springframework.web.bind.annotation.RestController;
 public class UserController {
 
     @GetMapping("/api/user")
-    @PreAuthorize("hasAnyRole('OAUTH2_USER')")
-    public Authentication user(Authentication authentication, @AuthenticationPrincipal OAuth2User oAuth2User) {
-        log.info("authentication = {}, oAuth2User = {}", authentication, oAuth2User);
-        return authentication;
-    }
-
-    @GetMapping("/api/oidc") // 요청시 scope 에 openid 가 포함되어야 oidcUser 가 생성된다
-    @PreAuthorize("hasAnyRole('OIDC_USER')")
-    public Authentication oidc(Authentication authentication, @AuthenticationPrincipal OidcUser oidcUser) {
-        log.info("authentication = {}, oidcUser = {}", authentication, oidcUser);
+    @PreAuthorize("hasAnyRole('OAUTH2_USER', 'OIDC_USER')")
+    public Authentication user(Authentication authentication,
+                               @AuthenticationPrincipal OAuth2User oAuth2User,
+                               @AuthenticationPrincipal OidcUser oidcUser) {
+        if (oidcUser != null) {
+            // OIDC 사용자 정보 로그
+            log.info("OIDC user authenticated. Authentication = {}, OidcUser = {}", authentication, oidcUser);
+        } else if (oAuth2User != null) {
+            // OAuth2 사용자 정보 로그
+            log.info("OAuth2 user authenticated. Authentication = {}, OAuth2User = {}", authentication, oAuth2User);
+        } else {
+            // 사용자 인증 정보가 없을 경우
+            log.info("No authenticated user found.");
+        }
         return authentication;
     }
 }

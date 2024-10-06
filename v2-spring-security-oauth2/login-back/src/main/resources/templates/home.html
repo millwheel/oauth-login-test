@@ -19,9 +19,7 @@
         <p>name: <span th:text="${name}"></span></p>
 
         <h3>인증 정보 가져오기</h3>
-        <button id="oauth2-info-btn" class="btn">OAuth2 인증정보</button>
-        <button id="oidc-info-btn" class="btn">OpenId Connect 인증정보</button>
-
+        <button id="user-info-btn" class="btn">OAuth2, OIDC 인증정보</button>
         <div id="result"></div>
 
         <br>
@@ -47,14 +45,10 @@
         }
 
         // OAuth2 인증정보 버튼 이벤트 핸들러
-        document.getElementById('oauth2-info-btn').addEventListener('click', function() {
+        document.getElementById('user-info-btn').addEventListener('click', function() {
             fetchAuthInfo('/api/user');
         });
 
-        // OIDC 인증정보 버튼 이벤트 핸들러
-        document.getElementById('oidc-info-btn').addEventListener('click', function() {
-            fetchAuthInfo('/api/oidc');
-        });
     </script>
 </body>
 </html>
