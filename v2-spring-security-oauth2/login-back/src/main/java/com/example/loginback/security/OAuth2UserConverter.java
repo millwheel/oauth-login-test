@@ -1,6 +1,5 @@
 package com.example.loginback.security;
 
-import com.example.loginback.entity.User;
 import com.example.loginback.security.model.GoogleUser;
 import com.example.loginback.security.model.KakaoUser;
 import com.example.loginback.security.model.NaverUser;
@@ -12,15 +11,13 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.oauth2.client.registration.ClientRegistration;
 import org.springframework.security.oauth2.core.user.OAuth2User;
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.Component;
 
-import java.util.Optional;
-
-@Service
+@Component
 @Getter
 @RequiredArgsConstructor
 @Slf4j
-public abstract class AbstractOAuth2UserService {
+public class OAuth2UserConverter {
 
     private final UserRepository userRepository;
     private final UserService userService;

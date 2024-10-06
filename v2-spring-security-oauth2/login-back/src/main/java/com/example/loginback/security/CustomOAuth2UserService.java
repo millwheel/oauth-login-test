@@ -3,6 +3,7 @@ package com.example.loginback.security;
 import com.example.loginback.security.model.ProviderUser;
 import com.example.loginback.repository.UserRepository;
 import com.example.loginback.service.UserService;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.oauth2.client.registration.ClientRegistration;
 import org.springframework.security.oauth2.client.userinfo.DefaultOAuth2UserService;
@@ -14,11 +15,10 @@ import org.springframework.stereotype.Service;
 
 @Slf4j
 @Service
-public class CustomOAuth2UserService extends AbstractOAuth2UserService implements OAuth2UserService<OAuth2UserRequest, OAuth2User> {
+@RequiredArgsConstructor
+public class CustomOAuth2UserService implements OAuth2UserService<OAuth2UserRequest, OAuth2User> {
 
-    public CustomOAuth2UserService(UserRepository userRepository, UserService userService) {
-        super(userRepository, userService);
-    }
+    private final OAuth2UserConverter oAuth2UserConverter;
 
     @Override
     public OAuth2User loadUser(OAuth2UserRequest userRequest) throws OAuth2AuthenticationException {
@@ -27,8 +27,8 @@ public class CustomOAuth2UserService extends AbstractOAuth2UserService implement
 
         // --- Delete this code block if you don't need the saving the user into Database ---
         ClientRegistration clientRegistration = userRequest.getClientRegistration();
-        ProviderUser providerUser = super.constructProviderUserFromOAuth2User(clientRegistration, oAuth2User);
-        super.register(providerUser);
+        ProviderUser providerUser = oAuth2UserConverter.constructProviderUserFromOAuth2User(clientRegistration, oAuth2User);
+        oAuth2UserConverter.register(providerUser);
         // -----------------------------------------------------------------------------------
 
         return oAuth2User;
