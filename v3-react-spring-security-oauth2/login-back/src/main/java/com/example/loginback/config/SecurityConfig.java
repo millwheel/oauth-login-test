@@ -9,8 +9,17 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configurers.HeadersConfigurer;
+import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.authority.mapping.GrantedAuthoritiesMapper;
+import org.springframework.security.oauth2.client.endpoint.DefaultAuthorizationCodeTokenResponseClient;
+import org.springframework.security.oauth2.client.endpoint.OAuth2AccessTokenResponseClient;
+import org.springframework.security.oauth2.client.endpoint.OAuth2AuthorizationCodeGrantRequest;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.CorsConfigurationSource;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+
+import java.util.Arrays;
 
 @Configuration
 @EnableMethodSecurity
@@ -26,14 +35,19 @@ public class SecurityConfig {
         http.authorizeHttpRequests(auth -> auth
                 .requestMatchers("/", "/login", "/h2-console/**", "/error/**").permitAll()
                 .anyRequest().authenticated());
-        http.oauth2Login(oauth2 -> oauth2
+        http.oauth2Login(oAuth2LoginConfigurer -> oAuth2LoginConfigurer
+                .authorizationEndpoint(authorization -> authorization
+                        .baseUri("/oauth2/authorize"))
+                .tokenEndpoint(tokenEndpointConfig -> tokenEndpointConfig
+                        .accessTokenResponseClient(accessTokenResponseClient()))
                 .userInfoEndpoint(userInfoEndpointConfig -> userInfoEndpointConfig
                         .userService(customOAuth2UserService)
                         .oidcUserService(customOidcUserService)));
-        http.logout(logout -> logout
-                .logoutSuccessUrl("/")
-                .permitAll());
-        // Allow the user access to the h2 console. Both below code is essential
+        http.cors(cors -> cors.configurationSource(corsConfigurationSource()));
+        // API based authentication relies on tokens so session management is not activated
+        http.sessionManagement(session -> session
+                .sessionCreationPolicy(SessionCreationPolicy.STATELESS));
+        // Allow the user can access to the h2 console. Both below code is essential
         http.csrf(csrf -> csrf
                 .ignoringRequestMatchers("/h2-console/**"));
         http.headers(headers -> headers
@@ -41,9 +55,29 @@ public class SecurityConfig {
         return http.build();
     }
 
+
+    @Bean
+    public OAuth2AccessTokenResponseClient<OAuth2AuthorizationCodeGrantRequest> accessTokenResponseClient() {
+        return new DefaultAuthorizationCodeTokenResponseClient();
+    }
+
     @Bean
     public GrantedAuthoritiesMapper customAuthoritiesMapper() {
         return new CustomAuthorityMapper();
+    }
+
+    @Bean
+    public CorsConfigurationSource corsConfigurationSource() {
+        CorsConfiguration configuration = new CorsConfiguration();
+        configuration.setAllowedOrigins(Arrays.asList("http://localhost:3000", "https://localhost:3000"));
+        configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS"));
+        configuration.setAllowedHeaders(Arrays.asList("Authorization", "Content-Type"));
+        configuration.setAllowCredentials(true);
+        configuration.setMaxAge(3000L);
+
+        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+        source.registerCorsConfiguration("/**", configuration);
+        return source;
     }
 
 }
