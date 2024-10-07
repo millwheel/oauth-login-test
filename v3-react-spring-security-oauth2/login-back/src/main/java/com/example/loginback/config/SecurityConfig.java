@@ -11,6 +11,7 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configurers.HeadersConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.authority.mapping.GrantedAuthoritiesMapper;
+import org.springframework.security.oauth2.client.authentication.OAuth2AuthenticationToken;
 import org.springframework.security.oauth2.client.endpoint.DefaultAuthorizationCodeTokenResponseClient;
 import org.springframework.security.oauth2.client.endpoint.OAuth2AccessTokenResponseClient;
 import org.springframework.security.oauth2.client.endpoint.OAuth2AuthorizationCodeGrantRequest;
@@ -36,13 +37,21 @@ public class SecurityConfig {
                 .requestMatchers("/", "/login", "/h2-console/**", "/error/**").permitAll()
                 .anyRequest().authenticated());
         http.oauth2Login(oAuth2LoginConfigurer -> oAuth2LoginConfigurer
-                .authorizationEndpoint(authorization -> authorization
-                        .baseUri("/oauth2/authorize"))
-                .tokenEndpoint(tokenEndpointConfig -> tokenEndpointConfig
-                        .accessTokenResponseClient(accessTokenResponseClient()))
+                // If you need custom endpoint to handle code and token exchange manually in frontend, Activate the below code
+//                .authorizationEndpoint(authorization -> authorization
+//                        .baseUri("/oauth2/authorize"))
+//                .tokenEndpoint(tokenEndpointConfig -> tokenEndpointConfig
+//                        .accessTokenResponseClient(accessTokenResponseClient()))
+                .successHandler((request, response, authentication) -> {
+                    OAuth2AuthenticationToken oauthToken = (OAuth2AuthenticationToken) authentication;
+                    // Generate tokens (e.g., JWT) and send them back in response
+                    response.setContentType("application/json");
+                    response.getWriter().write("{\"accessToken\": \"generated_token\"}");
+                })
                 .userInfoEndpoint(userInfoEndpointConfig -> userInfoEndpointConfig
                         .userService(customOAuth2UserService)
                         .oidcUserService(customOidcUserService)));
+
         http.cors(cors -> cors.configurationSource(corsConfigurationSource()));
         // API based authentication relies on tokens so session management is not activated
         http.sessionManagement(session -> session
