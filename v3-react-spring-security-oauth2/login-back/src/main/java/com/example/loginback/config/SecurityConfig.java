@@ -46,16 +46,13 @@ public class SecurityConfig {
                 .successHandler((request, response, authentication) -> {
                     OAuth2AuthenticationToken oauthToken = (OAuth2AuthenticationToken) authentication;
                     // Generate tokens (e.g., JWT) and send them back in response
-                    response.sendRedirect("/");
+                    response.sendRedirect("http://localhost:3000");
                 })
                 .userInfoEndpoint(userInfoEndpointConfig -> userInfoEndpointConfig
                         .userService(customOAuth2UserService)
                         .oidcUserService(customOidcUserService)));
 
         http.cors(cors -> cors.configurationSource(corsConfigurationSource()));
-        // API based authentication relies on tokens so session management is not activated
-//        http.sessionManagement(session -> session
-//                .sessionCreationPolicy(SessionCreationPolicy.STATELESS));
         // Allow the user can access to the h2 console. Both below code is essential
         http.csrf(csrf -> csrf
                 .ignoringRequestMatchers("/h2-console/**"));
