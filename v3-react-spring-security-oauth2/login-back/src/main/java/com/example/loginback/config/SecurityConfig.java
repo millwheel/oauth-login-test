@@ -35,7 +35,7 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http.authorizeHttpRequests(auth -> auth
-                .requestMatchers("/", "/login", "/h2-console/**", "/error/**").permitAll()
+                .requestMatchers("/", "/auth", "/login", "/h2-console/**", "/error/**").permitAll()
                 .anyRequest().authenticated());
         http.oauth2Login(oAuth2LoginConfigurer -> oAuth2LoginConfigurer
                 // If you need custom endpoint to handle code and token exchange manually in frontend, Activate the below code
