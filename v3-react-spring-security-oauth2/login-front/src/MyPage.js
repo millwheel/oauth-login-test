@@ -26,31 +26,37 @@ const MyPage = () => {
   return (
     <div>
       <BackButton to="/" />
-      <div>
-        <h2>User Information</h2>
-        <p>
-          <strong>ID:</strong> {userData.id}
-        </p>
-        <p>
-          <strong>Username:</strong> {userData.username}
-        </p>
-        <p>
-          <strong>Provider:</strong> {userData.provider}
-        </p>
-        <p>
-          <strong>Email:</strong> {userData.email}
-        </p>
-        <p>
-          <strong>Name:</strong> {userData.name}
-        </p>
-        <p>
-          <strong>Authorities:</strong>
-        </p>
-        <ul>
-          {userData.authorities.map((authority, index) => (
-            <li key={index}>{authority}</li>
-          ))}
-        </ul>
+      <div className="frame">
+        <div className="container">
+          <h1>User Information</h1>
+          <ul>
+            <li>
+              <strong>ID:</strong> {userData.id}
+            </li>
+            <li>
+              <strong>Username:</strong> {userData.username}
+            </li>
+            <li>
+              <strong>Provider:</strong> {userData.provider}
+            </li>
+            <li>
+              <strong>Email:</strong> {userData.email}
+            </li>
+            <li>
+              <strong>Name:</strong> {userData.name}
+            </li>
+            <li>
+              <strong>Authorities:</strong>
+              <ul className="authority-list">
+                {userData.authorities.map((authority, index) => (
+                  <li key={index} className="authority-item">
+                    {authority}
+                  </li>
+                ))}
+              </ul>
+            </li>
+          </ul>
+        </div>
       </div>
     </div>
   );

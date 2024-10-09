@@ -1,11 +1,11 @@
-import React, { useState } from "react";
+import React from "react";
 import BackButton from "./BackButton";
 
 function Login() {
-  const [error, setError] = useState("");
+  const serverBaseUrl = "http://localhost:8080";
 
-  const handleLogin = () => {
-    window.location.href = "http://localhost:8080/login";
+  const handleLogin = (provider) => {
+    window.location.href = `${serverBaseUrl}/oauth2/auth/${provider}`;
   };
 
   return (
@@ -13,11 +13,25 @@ function Login() {
       <BackButton to="/" />
       <div className="frame">
         <div className="container">
-          <h1>Login form</h1>
-          {error && <p style={{ color: "red" }}>{error}</p>}
+          <h1>Login</h1>
           <div className="oauth2_container">
-            <button onClick={handleLogin} className="oauth2_button">
-              Login with OAuth2
+            <button
+              onClick={() => handleLogin("google")}
+              className="oauth2_button"
+            >
+              Login with Google
+            </button>
+            <button
+              onClick={() => handleLogin("naver")}
+              className="oauth2_button"
+            >
+              Login with Naver
+            </button>
+            <button
+              onClick={() => handleLogin("kakao")}
+              className="oauth2_button"
+            >
+              Login with Kakao
             </button>
           </div>
         </div>
