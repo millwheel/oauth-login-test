@@ -4,11 +4,10 @@ import axios from "axios";
 import { toast } from "react-toastify";
 import { setCookie } from "./Cookie";
 
-function OAuthLogin({ provider, setIsAuthenticated, setEmail, setName }) {
+function OAuthCallback({ provider, setIsAuthenticated, setEmail, setName }) {
   const navigate = useNavigate();
   const location = useLocation();
   const [error, setError] = useState("");
-  const [requestMade, setRequestMade] = useState(false);
 
   const handleOAuthLogin = async () => {
     let url = "";
@@ -79,4 +78,4 @@ function OAuthLogin({ provider, setIsAuthenticated, setEmail, setName }) {
   );
 }
 
-export default OAuthLogin;
+export default OAuthCallback;
