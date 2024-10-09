@@ -3,6 +3,7 @@ package com.example.loginback.config;
 import com.example.loginback.security.CustomAuthorityMapper;
 import com.example.loginback.security.CustomOAuth2UserService;
 import com.example.loginback.security.CustomOidcUserService;
+import jakarta.servlet.http.Cookie;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -45,8 +46,7 @@ public class SecurityConfig {
                 .successHandler((request, response, authentication) -> {
                     OAuth2AuthenticationToken oauthToken = (OAuth2AuthenticationToken) authentication;
                     // Generate tokens (e.g., JWT) and send them back in response
-                    response.setContentType("application/json");
-                    response.getWriter().write("{\"accessToken\": \"generated_token\"}");
+                    response.sendRedirect("/");
                 })
                 .userInfoEndpoint(userInfoEndpointConfig -> userInfoEndpointConfig
                         .userService(customOAuth2UserService)
@@ -54,8 +54,8 @@ public class SecurityConfig {
 
         http.cors(cors -> cors.configurationSource(corsConfigurationSource()));
         // API based authentication relies on tokens so session management is not activated
-        http.sessionManagement(session -> session
-                .sessionCreationPolicy(SessionCreationPolicy.STATELESS));
+//        http.sessionManagement(session -> session
+//                .sessionCreationPolicy(SessionCreationPolicy.STATELESS));
         // Allow the user can access to the h2 console. Both below code is essential
         http.csrf(csrf -> csrf
                 .ignoringRequestMatchers("/h2-console/**"));
