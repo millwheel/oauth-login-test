@@ -9,17 +9,19 @@ function Login() {
   };
 
   return (
-    <div className="frame">
-      <div className="container">
-        <h1>Login form</h1>
-        {error && <p style={{ color: "red" }}>{error}</p>}
-        <div className="oauth2_container">
-          <button onClick={handleLogin} className="oauth2_button">
-            Login with OAuth2
-          </button>
+    <div>
+      <BackButton to="/" />
+      <div className="frame">
+        <div className="container">
+          <h1>Login form</h1>
+          {error && <p style={{ color: "red" }}>{error}</p>}
+          <div className="oauth2_container">
+            <button onClick={handleLogin} className="oauth2_button">
+              Login with OAuth2
+            </button>
+          </div>
         </div>
       </div>
-      <BackButton to="/" />
     </div>
   );
 }
