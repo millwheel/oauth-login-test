@@ -38,7 +38,6 @@ public class UserController {
             log.info("OAuth2 user authenticated. Authentication = {}, OAuth2User = {}", authentication, oAuth2User);
             return oAuth2User;
         }
-        log.info("No authenticated user found.");
         throw new RuntimeException("No authenticated user found.");
     }
 
@@ -56,7 +55,6 @@ public class UserController {
             } else if (oAuth2User != null) {
                 providerUser = oAuth2UserConverter.constructProviderUserFromOAuth2User(clientRegistrationId, oAuth2User);
             } else {
-                log.info("No authenticated user found.");
                 throw new RuntimeException("No authenticated user found.");
             }
             User user = userService.getUser(providerUser.getId());

@@ -40,11 +40,10 @@ public class SecurityConfig {
                 .requestMatchers("/", "/auth", "/login", "/h2-console/**", "/error/**").permitAll()
                 .anyRequest().authenticated());
         http.oauth2Login(oAuth2LoginConfigurer -> oAuth2LoginConfigurer
-                // If you need custom endpoint to handle code and token exchange manually in frontend, Activate the below code
-//                .authorizationEndpoint(authorization -> authorization
-//                        .baseUri("/oauth2/authorize"))
-//                .tokenEndpoint(tokenEndpointConfig -> tokenEndpointConfig
-//                        .accessTokenResponseClient(accessTokenResponseClient()))
+                .authorizationEndpoint(authorization -> authorization
+                        .baseUri("/oauth2/auth"))
+                .tokenEndpoint(tokenEndpointConfig -> tokenEndpointConfig
+                        .accessTokenResponseClient(accessTokenResponseClient()))
                 .successHandler((request, response, authentication) -> {
                     OAuth2AuthenticationToken oauthToken = (OAuth2AuthenticationToken) authentication;
                     // TODO Replace the OauthToken to Custom token
