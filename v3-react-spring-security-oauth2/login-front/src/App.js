@@ -15,21 +15,16 @@ axios.defaults.withCredentials = true;
 
 function App() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
-  const [email, setEmail] = useState("");
-  const [name, setName] = useState("");
 
   const checkAuthStatus = async () => {
-    return await axios.get("/session");
+    return await axios.get("/auth");
   };
 
   useEffect(() => {
     checkAuthStatus()
       .then((response) => {
-        if (response.data.isAuthenticated) {
-          setIsAuthenticated(true);
-        } else {
-          setIsAuthenticated(false);
-        }
+        setIsAuthenticated(response.data.isAuthenticated);
+        console.log(response.data.isAuthenticated);
       })
       .catch((error) => {
         setIsAuthenticated(false);
@@ -50,19 +45,12 @@ function App() {
         <Routes>
           <Route
             path="/"
-            element={
-              <Home
-                isAuthenticated={isAuthenticated}
-                name={name}
-                email={email}
-              />
-            }
+            element={<Home isAuthenticated={isAuthenticated} />}
           />
           <Route
             path="/login"
             element={<Login setIsAuthenticated={setIsAuthenticated} />}
           />
-          <Route path="/join" element={<Join />} />
           <Route
             path="/logout"
             element={<Logout setIsAuthenticated={setIsAuthenticated} />}

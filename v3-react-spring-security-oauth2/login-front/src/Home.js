@@ -18,9 +18,6 @@ function Home({ isAuthenticated, name, email }) {
               <Link to={"/login"}>
                 <button className={"login_button"}> login </button>
               </Link>
-              <Link to={"/join"}>
-                <button className={"join_button"}> join </button>
-              </Link>
             </>
           )}
         </div>
@@ -30,8 +27,6 @@ function Home({ isAuthenticated, name, email }) {
           {isAuthenticated ? (
             <>
               <h1> "Welcome. You are logged in." </h1>
-              <h2> email: {email} </h2>
-              <h2> name: {name} </h2>
             </>
           ) : (
             <>
