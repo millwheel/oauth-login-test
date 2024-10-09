@@ -4,6 +4,7 @@ import com.example.loginback.security.CustomAuthorityMapper;
 import com.example.loginback.security.CustomOAuth2UserService;
 import com.example.loginback.security.CustomOidcUserService;
 import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -22,6 +23,7 @@ import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 import java.util.Arrays;
+import java.util.List;
 
 @Configuration
 @EnableMethodSecurity
@@ -45,17 +47,22 @@ public class SecurityConfig {
 //                        .accessTokenResponseClient(accessTokenResponseClient()))
                 .successHandler((request, response, authentication) -> {
                     OAuth2AuthenticationToken oauthToken = (OAuth2AuthenticationToken) authentication;
-                    // Generate tokens (e.g., JWT) and send them back in response
+                    // TODO Replace the OauthToken to Custom token
                     response.sendRedirect("http://localhost:3000");
                 })
                 .userInfoEndpoint(userInfoEndpointConfig -> userInfoEndpointConfig
                         .userService(customOAuth2UserService)
                         .oidcUserService(customOidcUserService)));
+        http.logout(logout -> logout
+                .logoutSuccessHandler((request, response, authentication) -> {
+                    response.setStatus(HttpServletResponse.SC_OK);
+                })
+                .invalidateHttpSession(true)
+                .deleteCookies("JSESSIONID"));
 
-        http.cors(cors -> cors.configurationSource(corsConfigurationSource()));
         // Allow the user can access to the h2 console. Both below code is essential
-        http.csrf(csrf -> csrf
-                .ignoringRequestMatchers("/h2-console/**"));
+        http.csrf(csrf -> csrf.disable());
+        http.cors(cors -> cors.configurationSource(corsConfigurationSource()));
         http.headers(headers -> headers
                 .frameOptions(HeadersConfigurer.FrameOptionsConfig::sameOrigin));
         return http.build();
@@ -77,7 +84,7 @@ public class SecurityConfig {
         CorsConfiguration configuration = new CorsConfiguration();
         configuration.setAllowedOrigins(Arrays.asList("http://localhost:3000", "https://localhost:3000"));
         configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS"));
-        configuration.setAllowedHeaders(Arrays.asList("Authorization", "Content-Type"));
+        configuration.setAllowedHeaders(List.of("*"));
         configuration.setAllowCredentials(true);
         configuration.setMaxAge(3000L);
 
