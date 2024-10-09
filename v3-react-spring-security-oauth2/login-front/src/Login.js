@@ -1,7 +1,7 @@
 import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import BackButton from "./BackButton";
 
-function Login({ setIsAuthenticated }) {
+function Login() {
   const [error, setError] = useState("");
 
   const handleLogin = () => {
@@ -19,6 +19,7 @@ function Login({ setIsAuthenticated }) {
           </button>
         </div>
       </div>
+      <BackButton to="/" />
     </div>
   );
 }

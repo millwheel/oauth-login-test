@@ -9,6 +9,9 @@ function Home({ isAuthenticated, name, email }) {
         <div>
           {isAuthenticated ? (
             <>
+              <Link to={"/my-page"}>
+                <button className={"my_page_button"}>My Page</button>
+              </Link>
               <Link to={"/logout"}>
                 <button className={"login_button"}>Logout</button>
               </Link>

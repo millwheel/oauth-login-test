@@ -13,7 +13,6 @@ const Logout = () => {
   useEffect(() => {
     logoutHandler()
       .then((response) => {
-        console.log(response);
         navigate("/");
         window.location.reload();
       })
