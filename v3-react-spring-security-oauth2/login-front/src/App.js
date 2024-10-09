@@ -10,6 +10,7 @@ import "react-toastify/dist/ReactToastify.css";
 import Logout from "./Logout";
 import axios from "axios";
 import OAuthCallback from "./Oauth_callback";
+import OAuthLogin from "./Oauth_callback";
 
 axios.defaults.baseURL = "http://localhost:8080";
 axios.defaults.withCredentials = true;
@@ -69,9 +70,9 @@ function App() {
             element={<Logout setIsAuthenticated={setIsAuthenticated} />}
           />
           <Route
-            path="/oauth/google/callback"
+            path="/oauth/google"
             element={
-              <OAuthCallback
+              <OAuthLogin
                 provider="google"
                 setIsAuthenticated={setIsAuthenticated}
                 setName={setName}
@@ -80,9 +81,9 @@ function App() {
             }
           />
           <Route
-            path="/oauth/naver/callback"
+            path="/oauth/naver"
             element={
-              <OAuthCallback
+              <OAuthLogin
                 provider="naver"
                 setIsAuthenticated={setIsAuthenticated}
                 setName={setName}
@@ -91,9 +92,9 @@ function App() {
             }
           />
           <Route
-            path="/oauth/kakao/callback"
+            path="/oauth/kakao"
             element={
-              <OAuthCallback
+              <OAuthLogin
                 provider="kakao"
                 setIsAuthenticated={setIsAuthenticated}
                 setName={setName}

@@ -4,13 +4,13 @@ import axios from "axios";
 import { toast } from "react-toastify";
 import { setCookie } from "./Cookie";
 
-function OAuthCallback({ provider, setIsAuthenticated, setEmail, setName }) {
+function OAuthLogin({ provider, setIsAuthenticated, setEmail, setName }) {
   const navigate = useNavigate();
   const location = useLocation();
   const [error, setError] = useState("");
   const [requestMade, setRequestMade] = useState(false);
 
-  const handleOAuthCallback = async () => {
+  const handleOAuthLogin = async () => {
     let url = "";
     const params = new URLSearchParams(location.search);
     switch (provider) {
@@ -46,7 +46,7 @@ function OAuthCallback({ provider, setIsAuthenticated, setEmail, setName }) {
   };
 
   useEffect(() => {
-    handleOAuthCallback()
+    handleOAuthLogin()
       .then((response) => {
         const { message, accessToken, expiresIn, email, name } = response.data;
         toast.success(message, {
@@ -79,4 +79,4 @@ function OAuthCallback({ provider, setIsAuthenticated, setEmail, setName }) {
   );
 }
 
-export default OAuthCallback;
+export default OAuthLogin;
