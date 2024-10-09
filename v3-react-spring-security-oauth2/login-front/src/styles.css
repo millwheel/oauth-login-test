@@ -1,14 +1,8 @@
 
-.header{
+.home-header{
     margin: 10px;
     display: flex;
     justify-content: space-between;
-}
-
-.back{
-    margin: 10px;
-    display: flex;
-    justify-content: end;
 }
 
 .intro{
@@ -30,18 +24,6 @@ button:hover{
     background-color: #e4e4e4;
 }
 
-.submit_button{
-    border: none;
-    color: peachpuff;
-    background-color: #4e94d3;
-    transition: background-color 0.3s ease-in, color 0.3s ease-in;
-}
-
-.submit_button:hover{
-    color: lemonchiffon;
-    background-color: #65b1cd;
-}
-
 .login_button{
     color: #408cce;
     backgroud-color: white;
@@ -52,18 +34,8 @@ button:hover{
     background-color: #e4e4e4;
 }
 
-.join_button{
-    color: white;
-    background-color: #408cce;
-    margin: 10px;
-}
 
-.join_button:hover{
-    cursor: pointer;
-    background-color: #6daee6;
-}
-
-.body{
+.home-body{
     text-align: center;
 }
 

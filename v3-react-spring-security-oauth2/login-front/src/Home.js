@@ -1,10 +1,10 @@
 import React from "react";
 import { Link } from "react-router-dom";
 
-function Home({ isAuthenticated, name, email }) {
+function Home({ isAuthenticated }) {
   return (
     <div>
-      <div className="header">
+      <div className="home-header">
         <h2 className="intro">Login Test App</h2>
         <div>
           {isAuthenticated ? (
@@ -25,7 +25,7 @@ function Home({ isAuthenticated, name, email }) {
           )}
         </div>
       </div>
-      <div className="body">
+      <div className="home-body">
         <div className="status_text_container">
           {isAuthenticated ? (
             <>

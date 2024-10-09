@@ -47,14 +47,8 @@ function App() {
             path="/"
             element={<Home isAuthenticated={isAuthenticated} />}
           />
-          <Route
-            path="/login"
-            element={<Login setIsAuthenticated={setIsAuthenticated} />}
-          />
-          <Route
-            path="/logout"
-            element={<Logout setIsAuthenticated={setIsAuthenticated} />}
-          />
+          <Route path="/login" element={<Login />} />
+          <Route path="/logout" element={<Logout />} />
           <Route path="/my-page" element={<MyPage />} />
         </Routes>
       </BrowserRouter>
