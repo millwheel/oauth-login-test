@@ -25,31 +25,33 @@ const MyPage = () => {
 
   return (
     <div>
-      <h2>User Information</h2>
-      <p>
-        <strong>ID:</strong> {userData.id}
-      </p>
-      <p>
-        <strong>Username:</strong> {userData.username}
-      </p>
-      <p>
-        <strong>Provider:</strong> {userData.provider}
-      </p>
-      <p>
-        <strong>Email:</strong> {userData.email}
-      </p>
-      <p>
-        <strong>Name:</strong> {userData.name}
-      </p>
-      <p>
-        <strong>Authorities:</strong>
-      </p>
-      <ul>
-        {userData.authorities.map((authority, index) => (
-          <li key={index}>{authority}</li>
-        ))}
-      </ul>
       <BackButton to="/" />
+      <div>
+        <h2>User Information</h2>
+        <p>
+          <strong>ID:</strong> {userData.id}
+        </p>
+        <p>
+          <strong>Username:</strong> {userData.username}
+        </p>
+        <p>
+          <strong>Provider:</strong> {userData.provider}
+        </p>
+        <p>
+          <strong>Email:</strong> {userData.email}
+        </p>
+        <p>
+          <strong>Name:</strong> {userData.name}
+        </p>
+        <p>
+          <strong>Authorities:</strong>
+        </p>
+        <ul>
+          {userData.authorities.map((authority, index) => (
+            <li key={index}>{authority}</li>
+          ))}
+        </ul>
+      </div>
     </div>
   );
 };
