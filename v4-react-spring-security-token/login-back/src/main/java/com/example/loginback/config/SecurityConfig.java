@@ -57,13 +57,12 @@ public class SecurityConfig {
                         .userService(customOAuth2UserService)
                         .oidcUserService(customOidcUserService)));
         http.addFilterBefore(new JwtAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class);
-        // TODO logout setting 수정 필요
         http.logout(logout -> logout
                 .logoutSuccessHandler((request, response, authentication) -> {
                     response.setStatus(HttpServletResponse.SC_OK);
+                    response.getWriter().write("Logout successful");
                 })
-                .invalidateHttpSession(true)
-                .deleteCookies("JSESSIONID"));
+                .clearAuthentication(true));
         // Deactivate security session storage because we use JWT in this version
         http.sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
         // Allow the user can access to the h2 console. Both below code is essential
