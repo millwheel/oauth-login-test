@@ -3,7 +3,8 @@ package com.example.loginback.config;
 import com.example.loginback.security.CustomAuthorityMapper;
 import com.example.loginback.security.CustomOAuth2UserService;
 import com.example.loginback.security.CustomOidcUserService;
-import jakarta.servlet.http.Cookie;
+import com.example.loginback.security.jwt.JwtAuthenticationFilter;
+import com.example.loginback.security.jwt.JwtTokenProvider;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
@@ -18,6 +19,7 @@ import org.springframework.security.oauth2.client.endpoint.DefaultAuthorizationC
 import org.springframework.security.oauth2.client.endpoint.OAuth2AccessTokenResponseClient;
 import org.springframework.security.oauth2.client.endpoint.OAuth2AuthorizationCodeGrantRequest;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
@@ -31,6 +33,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class SecurityConfig {
 
+    private final JwtTokenProvider jwtTokenProvider;
     private final CustomOAuth2UserService customOAuth2UserService;
     private final CustomOidcUserService customOidcUserService;
 
@@ -46,19 +49,23 @@ public class SecurityConfig {
                         .accessTokenResponseClient(accessTokenResponseClient()))
                 .successHandler((request, response, authentication) -> {
                     OAuth2AuthenticationToken oauthToken = (OAuth2AuthenticationToken) authentication;
-                    // TODO Replace the OauthToken to Custom token
+                    String token = jwtTokenProvider.generateToken(oauthToken);
+                    response.setHeader("Authorization", "Bearer " + token);
                     response.sendRedirect("http://localhost:3000");
                 })
                 .userInfoEndpoint(userInfoEndpointConfig -> userInfoEndpointConfig
                         .userService(customOAuth2UserService)
                         .oidcUserService(customOidcUserService)));
+        http.addFilterBefore(new JwtAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class);
+        // TODO logout setting 수정 필요
         http.logout(logout -> logout
                 .logoutSuccessHandler((request, response, authentication) -> {
                     response.setStatus(HttpServletResponse.SC_OK);
                 })
                 .invalidateHttpSession(true)
                 .deleteCookies("JSESSIONID"));
-
+        // Deactivate security session storage because we use JWT in this version
+        http.sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
         // Allow the user can access to the h2 console. Both below code is essential
         http.csrf(csrf -> csrf.disable());
         http.cors(cors -> cors.configurationSource(corsConfigurationSource()));
