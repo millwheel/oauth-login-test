@@ -51,7 +51,7 @@ public class SecurityConfig {
                     OAuth2AuthenticationToken oauthToken = (OAuth2AuthenticationToken) authentication;
                     String token = jwtTokenProvider.generateToken(oauthToken);
                     response.setHeader("Authorization", "Bearer " + token);
-                    response.sendRedirect("http://localhost:3000");
+                    response.sendRedirect("http://localhost:3000?token=" + token);
                 })
                 .userInfoEndpoint(userInfoEndpointConfig -> userInfoEndpointConfig
                         .userService(customOAuth2UserService)
