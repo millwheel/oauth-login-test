@@ -4,7 +4,6 @@ import { useEffect, useState } from "react";
 
 import Login from "./Login";
 import Home from "./Home";
-import "react-toastify/dist/ReactToastify.css";
 import Logout from "./Logout";
 import axios from "axios";
 import MyPage from "./MyPage";
@@ -23,10 +22,11 @@ function App() {
     checkAuthStatus()
       .then((response) => {
         setIsAuthenticated(response.data.isAuthenticated);
+        console.log(response.data.isAuthenticated);
       })
       .catch((error) => {
         setIsAuthenticated(false);
-        console.error("Session check failed", error);
+        console.error("Auth check failed", error);
       });
   }, []);
 
