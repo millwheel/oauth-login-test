@@ -37,7 +37,6 @@ public class SecurityConfig {
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-        http.addFilterBefore(new JwtAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class);
         http.authorizeHttpRequests(auth -> auth
                 .requestMatchers("/", "/auth", "/login", "/h2-console/**", "/error/**").permitAll()
                 .anyRequest().authenticated());
@@ -52,6 +51,7 @@ public class SecurityConfig {
                         .oidcUserService(customOidcUserService)));
         http.logout(logout -> logout
                 .logoutSuccessHandler(oAuth2LogoutHandler::logout));
+        http.addFilterBefore(new JwtAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class);
         // Deactivate security session storage because we use JWT in this version
         http.sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
         // Allow the user can access to the h2 console. Both below code is essential

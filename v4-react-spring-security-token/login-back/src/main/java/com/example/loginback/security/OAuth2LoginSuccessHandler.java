@@ -1,6 +1,8 @@
 package com.example.loginback.security;
 
-import com.example.loginback.security.jwt.JwtTokenManager;
+import com.example.loginback.security.jwt.JwtCookieName;
+import com.example.loginback.security.jwt.JwtCookieProvider;
+import com.example.loginback.security.jwt.JwtTokenProvider;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -16,23 +18,16 @@ import java.io.IOException;
 @RequiredArgsConstructor
 public class OAuth2LoginSuccessHandler implements AuthenticationSuccessHandler {
 
-    private final JwtTokenManager jwtTokenProvider;
+    private final JwtTokenProvider jwtTokenProvider;
+    private final JwtCookieProvider jwtCookieProvider;
 
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException {
         OAuth2AuthenticationToken oauthToken = (OAuth2AuthenticationToken) authentication;
         String token = jwtTokenProvider.generateToken(oauthToken);
-        Cookie jwtCookie = createJwtCookie(token);
+        Cookie jwtCookie = jwtCookieProvider.createLoginCookie(token);
         response.addCookie(jwtCookie);
         response.sendRedirect("http://localhost:3000");
-    }
-
-    private Cookie createJwtCookie(String token) {
-        Cookie jwtCookie = new Cookie("JWT", token);
-        jwtCookie.setHttpOnly(true); // Block the JS approach to Cookie
-        jwtCookie.setMaxAge(2 * 60 * 60); // 2 Hours valid Cookie
-        jwtCookie.setPath("/"); // Open for all path in domain
-        return jwtCookie;
     }
 
 }

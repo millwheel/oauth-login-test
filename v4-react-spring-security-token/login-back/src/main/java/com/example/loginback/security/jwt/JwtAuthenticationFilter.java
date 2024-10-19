@@ -31,9 +31,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(userId, null, null);
 
             authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
-            System.out.println("before: " + SecurityContextHolder.getContext().getAuthentication());
             SecurityContextHolder.getContext().setAuthentication(authentication);
-            System.out.println("after: " + SecurityContextHolder.getContext().getAuthentication());
         }
         filterChain.doFilter(request, response);
     }
@@ -50,7 +48,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         Cookie[] cookies = request.getCookies();
         if (cookies != null) {
             for (Cookie cookie : cookies) {
-                if ("JWT".equals(cookie.getName())) {
+                if (JwtCookieName.JWT.name().equals(cookie.getName())) {
                     return cookie.getValue();
                 }
             }

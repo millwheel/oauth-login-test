@@ -9,7 +9,7 @@ import java.util.Date;
 import java.util.List;
 
 @Component
-public class JwtTokenManager {
+public class JwtTokenProvider {
 
     private static final long EXPIRATION_TIME = 5 * 60 * 1000;
 
