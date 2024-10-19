@@ -43,7 +43,7 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http.addFilterBefore(new JwtAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class);
         http.authorizeHttpRequests(auth -> auth
-                .requestMatchers("/", "/login", "/h2-console/**", "/error/**").permitAll()
+                .requestMatchers("/", "/auth", "/login", "/h2-console/**", "/error/**").permitAll()
                 .anyRequest().authenticated());
         http.oauth2Login(oAuth2LoginConfigurer -> oAuth2LoginConfigurer
                 .authorizationEndpoint(authorization -> authorization
@@ -54,12 +54,6 @@ public class SecurityConfig {
                 .userInfoEndpoint(userInfoEndpointConfig -> userInfoEndpointConfig
                         .userService(customOAuth2UserService)
                         .oidcUserService(customOidcUserService)));
-        http.logout(logout -> logout
-                .logoutSuccessHandler((request, response, authentication) -> {
-                    response.setStatus(HttpServletResponse.SC_OK);
-                    response.getWriter().write("Logout successful");
-                })
-                .clearAuthentication(true));
         // Deactivate security session storage because we use JWT in this version
         http.sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
         // Allow the user can access to the h2 console. Both below code is essential
