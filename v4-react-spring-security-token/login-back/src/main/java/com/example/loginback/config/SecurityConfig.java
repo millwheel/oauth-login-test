@@ -3,8 +3,9 @@ package com.example.loginback.config;
 import com.example.loginback.security.CustomAuthorityMapper;
 import com.example.loginback.security.CustomOAuth2UserService;
 import com.example.loginback.security.CustomOidcUserService;
+import com.example.loginback.security.OAuth2SuccessHandler;
 import com.example.loginback.security.jwt.JwtAuthenticationFilter;
-import com.example.loginback.security.jwt.JwtTokenProvider;
+import com.example.loginback.security.jwt.JwtTokenManager;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
@@ -34,31 +35,25 @@ import java.util.List;
 @RequiredArgsConstructor
 public class SecurityConfig {
 
-    private final JwtTokenProvider jwtTokenProvider;
+    private final OAuth2SuccessHandler oAuth2SuccessHandler;
     private final CustomOAuth2UserService customOAuth2UserService;
     private final CustomOidcUserService customOidcUserService;
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+        http.addFilterBefore(new JwtAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class);
         http.authorizeHttpRequests(auth -> auth
-                .requestMatchers("/", "/auth", "/login", "/h2-console/**", "/error/**").permitAll()
+                .requestMatchers("/", "/login", "/h2-console/**", "/error/**").permitAll()
                 .anyRequest().authenticated());
         http.oauth2Login(oAuth2LoginConfigurer -> oAuth2LoginConfigurer
                 .authorizationEndpoint(authorization -> authorization
                         .baseUri("/oauth2/auth"))
                 .tokenEndpoint(tokenEndpointConfig -> tokenEndpointConfig
                         .accessTokenResponseClient(accessTokenResponseClient()))
-                .successHandler((request, response, authentication) -> {
-                    OAuth2AuthenticationToken oauthToken = (OAuth2AuthenticationToken) authentication;
-                    String token = jwtTokenProvider.generateToken(oauthToken);
-                    Cookie jwtCookie = createJwtCookie(token);
-                    response.addCookie(jwtCookie);
-                    response.sendRedirect("http://localhost:3000");
-                })
+                .successHandler(oAuth2SuccessHandler)
                 .userInfoEndpoint(userInfoEndpointConfig -> userInfoEndpointConfig
                         .userService(customOAuth2UserService)
                         .oidcUserService(customOidcUserService)));
-        http.addFilterBefore(new JwtAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class);
         http.logout(logout -> logout
                 .logoutSuccessHandler((request, response, authentication) -> {
                     response.setStatus(HttpServletResponse.SC_OK);
@@ -104,7 +99,7 @@ public class SecurityConfig {
         Cookie jwtCookie = new Cookie("JWT", token);
         jwtCookie.setHttpOnly(true); // Block the JS approach to Cookie
         jwtCookie.setMaxAge(2 * 60 * 60); // 2 Hours valid Cookie
-        jwtCookie.setPath("/"); // Open for all paths in domain
+        jwtCookie.setPath("/"); // Open for all path in domain
         return jwtCookie;
     }
 
