@@ -4,7 +4,6 @@ import { useEffect, useState } from "react";
 
 import Login from "./Login";
 import Home from "./Home";
-import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import Logout from "./Logout";
 import axios from "axios";
@@ -24,7 +23,6 @@ function App() {
     checkAuthStatus()
       .then((response) => {
         setIsAuthenticated(response.data.isAuthenticated);
-        console.log(response.data.isAuthenticated);
       })
       .catch((error) => {
         setIsAuthenticated(false);
@@ -34,13 +32,6 @@ function App() {
 
   return (
     <div>
-      <ToastContainer
-        position="top-center"
-        autoClose={1000}
-        draggable
-        pauseOnHover
-        limit={1}
-      />
       <BrowserRouter>
         <Routes>
           <Route
