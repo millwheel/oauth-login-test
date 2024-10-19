@@ -1,6 +1,5 @@
 package com.example.loginback.security;
 
-import com.example.loginback.security.jwt.JwtCookieName;
 import com.example.loginback.security.jwt.JwtCookieProvider;
 import com.example.loginback.security.jwt.JwtTokenProvider;
 import jakarta.servlet.http.Cookie;
