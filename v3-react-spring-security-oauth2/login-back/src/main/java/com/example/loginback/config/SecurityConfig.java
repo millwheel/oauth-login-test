@@ -3,7 +3,6 @@ package com.example.loginback.config;
 import com.example.loginback.security.CustomAuthorityMapper;
 import com.example.loginback.security.CustomOAuth2UserService;
 import com.example.loginback.security.CustomOidcUserService;
-import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
@@ -11,9 +10,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configurers.HeadersConfigurer;
-import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.authority.mapping.GrantedAuthoritiesMapper;
-import org.springframework.security.oauth2.client.authentication.OAuth2AuthenticationToken;
 import org.springframework.security.oauth2.client.endpoint.DefaultAuthorizationCodeTokenResponseClient;
 import org.springframework.security.oauth2.client.endpoint.OAuth2AccessTokenResponseClient;
 import org.springframework.security.oauth2.client.endpoint.OAuth2AuthorizationCodeGrantRequest;
@@ -44,11 +41,7 @@ public class SecurityConfig {
                         .baseUri("/oauth2/auth"))
                 .tokenEndpoint(tokenEndpointConfig -> tokenEndpointConfig
                         .accessTokenResponseClient(accessTokenResponseClient()))
-                .successHandler((request, response, authentication) -> {
-                    OAuth2AuthenticationToken oauthToken = (OAuth2AuthenticationToken) authentication;
-                    // TODO Replace the OauthToken to Custom token
-                    response.sendRedirect("http://localhost:3000");
-                })
+                .successHandler((request, response, authentication) -> response.sendRedirect("http://localhost:3000"))
                 .userInfoEndpoint(userInfoEndpointConfig -> userInfoEndpointConfig
                         .userService(customOAuth2UserService)
                         .oidcUserService(customOidcUserService)));
