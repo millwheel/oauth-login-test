@@ -22,7 +22,6 @@ function App() {
     checkAuthStatus()
       .then((response) => {
         setIsAuthenticated(response.data.isAuthenticated);
-        console.log(response.data.isAuthenticated);
       })
       .catch((error) => {
         setIsAuthenticated(false);

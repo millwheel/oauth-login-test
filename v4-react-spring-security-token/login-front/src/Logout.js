@@ -1,5 +1,4 @@
 import { useNavigate } from "react-router-dom";
-import { toast } from "react-toastify";
 import axios from "axios";
 import { useEffect } from "react";
 
@@ -18,7 +17,6 @@ const Logout = () => {
       })
       .catch((error) => {
         console.error(error.response?.data || error.message);
-        toast.error(error.response?.data || "Logout failed.");
       });
   }, []);
 };
