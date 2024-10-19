@@ -1,11 +1,7 @@
 package com.example.loginback.config;
 
-import com.example.loginback.security.CustomAuthorityMapper;
-import com.example.loginback.security.CustomOAuth2UserService;
-import com.example.loginback.security.CustomOidcUserService;
-import com.example.loginback.security.OAuth2SuccessHandler;
+import com.example.loginback.security.*;
 import com.example.loginback.security.jwt.JwtAuthenticationFilter;
-import com.example.loginback.security.jwt.JwtTokenManager;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
@@ -16,7 +12,6 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configurers.HeadersConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.authority.mapping.GrantedAuthoritiesMapper;
-import org.springframework.security.oauth2.client.authentication.OAuth2AuthenticationToken;
 import org.springframework.security.oauth2.client.endpoint.DefaultAuthorizationCodeTokenResponseClient;
 import org.springframework.security.oauth2.client.endpoint.OAuth2AccessTokenResponseClient;
 import org.springframework.security.oauth2.client.endpoint.OAuth2AuthorizationCodeGrantRequest;
@@ -35,7 +30,8 @@ import java.util.List;
 @RequiredArgsConstructor
 public class SecurityConfig {
 
-    private final OAuth2SuccessHandler oAuth2SuccessHandler;
+    private final OAuth2LoginSuccessHandler oAuth2LoginSuccessHandler;
+    private final OAuth2LogoutHandler oAuth2LogoutHandler;
     private final CustomOAuth2UserService customOAuth2UserService;
     private final CustomOidcUserService customOidcUserService;
 
@@ -50,10 +46,12 @@ public class SecurityConfig {
                         .baseUri("/oauth2/auth"))
                 .tokenEndpoint(tokenEndpointConfig -> tokenEndpointConfig
                         .accessTokenResponseClient(accessTokenResponseClient()))
-                .successHandler(oAuth2SuccessHandler)
+                .successHandler(oAuth2LoginSuccessHandler)
                 .userInfoEndpoint(userInfoEndpointConfig -> userInfoEndpointConfig
                         .userService(customOAuth2UserService)
                         .oidcUserService(customOidcUserService)));
+        http.logout(logout -> logout
+                .logoutSuccessHandler(oAuth2LogoutHandler::logout));
         // Deactivate security session storage because we use JWT in this version
         http.sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
         // Allow the user can access to the h2 console. Both below code is essential

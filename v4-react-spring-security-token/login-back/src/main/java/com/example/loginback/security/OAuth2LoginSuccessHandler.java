@@ -1,7 +1,6 @@
 package com.example.loginback.security;
 
 import com.example.loginback.security.jwt.JwtTokenManager;
-import jakarta.servlet.ServletException;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -15,7 +14,7 @@ import java.io.IOException;
 
 @Component
 @RequiredArgsConstructor
-public class OAuth2SuccessHandler implements AuthenticationSuccessHandler {
+public class OAuth2LoginSuccessHandler implements AuthenticationSuccessHandler {
 
     private final JwtTokenManager jwtTokenProvider;
 
@@ -35,6 +34,5 @@ public class OAuth2SuccessHandler implements AuthenticationSuccessHandler {
         jwtCookie.setPath("/"); // Open for all path in domain
         return jwtCookie;
     }
-
 
 }
