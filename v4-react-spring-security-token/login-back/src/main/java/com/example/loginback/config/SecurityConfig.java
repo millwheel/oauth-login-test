@@ -5,6 +5,7 @@ import com.example.loginback.security.CustomOAuth2UserService;
 import com.example.loginback.security.CustomOidcUserService;
 import com.example.loginback.security.jwt.JwtAuthenticationFilter;
 import com.example.loginback.security.jwt.JwtTokenProvider;
+import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
@@ -50,8 +51,9 @@ public class SecurityConfig {
                 .successHandler((request, response, authentication) -> {
                     OAuth2AuthenticationToken oauthToken = (OAuth2AuthenticationToken) authentication;
                     String token = jwtTokenProvider.generateToken(oauthToken);
-                    response.setHeader("Authorization", "Bearer " + token);
-                    response.sendRedirect("http://localhost:3000?token=" + token);
+                    Cookie jwtCookie = createJwtCookie(token);
+                    response.addCookie(jwtCookie);
+                    response.sendRedirect("http://localhost:3000");
                 })
                 .userInfoEndpoint(userInfoEndpointConfig -> userInfoEndpointConfig
                         .userService(customOAuth2UserService)
@@ -96,6 +98,14 @@ public class SecurityConfig {
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", configuration);
         return source;
+    }
+
+    private Cookie createJwtCookie(String token) {
+        Cookie jwtCookie = new Cookie("JWT", token);
+        jwtCookie.setHttpOnly(true); // Block the JS approach to Cookie
+        jwtCookie.setMaxAge(2 * 60 * 60); // 2 Hours valid Cookie
+        jwtCookie.setPath("/"); // Open for all paths in domain
+        return jwtCookie;
     }
 
 }
