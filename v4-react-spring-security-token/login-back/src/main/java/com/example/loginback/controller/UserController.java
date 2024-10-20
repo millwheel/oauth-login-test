@@ -17,6 +17,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.Map;
+
 @Slf4j
 @RestController
 @RequestMapping("/users")
@@ -43,24 +45,9 @@ public class UserController {
 
     @GetMapping("/db")
     @PreAuthorize("hasAnyRole('OAUTH2_USER', 'OIDC_USER')")
-    public UserResponseDto dbUser(Authentication authentication,
-                                  @AuthenticationPrincipal OAuth2User oAuth2User,
-                                  @AuthenticationPrincipal OidcUser oidcUser) {
-        ProviderUser providerUser;
-
-        if (authentication instanceof OAuth2AuthenticationToken authenticationToken){
-            String clientRegistrationId = authenticationToken.getAuthorizedClientRegistrationId();
-            if (oidcUser != null) {
-                providerUser = oAuth2UserConverter.constructProviderUserFromOAuth2User(clientRegistrationId, oidcUser);
-            } else if (oAuth2User != null) {
-                providerUser = oAuth2UserConverter.constructProviderUserFromOAuth2User(clientRegistrationId, oAuth2User);
-            } else {
-                throw new RuntimeException("No authenticated user found.");
-            }
-            User user = userService.getUser(providerUser.getId());
-            return new UserResponseDto(user);
-        }
-
-        throw new RuntimeException("No authentication or wrong authentication type");
+    public UserResponseDto dbUser(@AuthenticationPrincipal OAuth2User oAuth2User) {
+        Map<String, Object> attributes = oAuth2User.getAttributes();
+        User user = userService.getUser(attributes.get("sub").toString());
+        return new UserResponseDto(user);
     }
 }

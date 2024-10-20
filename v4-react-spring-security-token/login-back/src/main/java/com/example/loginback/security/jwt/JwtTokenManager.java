@@ -64,18 +64,12 @@ public class JwtTokenManager {
     private Map<String, Object> getAttributesFromClaims(Claims body) {
         String userId = body.getSubject();
         String email = body.get("email", String.class);
-        Boolean emailVerified = body.get("email_verified", Boolean.class);
         String name = body.get("name", String.class);
-        String givenName = body.get("given_name", String.class);
-        String familyName = body.get("family_name", String.class);
 
         Map<String, Object> attributes = new HashMap<>();
         attributes.put("sub", userId);
         attributes.put("email", email);
-        attributes.put("email_verified", emailVerified);
         attributes.put("name", name);
-        attributes.put("given_name", givenName);
-        attributes.put("family_name", familyName);
         return attributes;
     }
 
