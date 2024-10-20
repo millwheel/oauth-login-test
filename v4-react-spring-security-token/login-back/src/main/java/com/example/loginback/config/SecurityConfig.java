@@ -2,6 +2,7 @@ package com.example.loginback.config;
 
 import com.example.loginback.security.*;
 import com.example.loginback.security.jwt.JwtAuthenticationFilter;
+import com.example.loginback.security.jwt.JwtTokenManager;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
@@ -34,6 +35,7 @@ public class SecurityConfig {
     private final OAuth2LogoutHandler oAuth2LogoutHandler;
     private final CustomOAuth2UserService customOAuth2UserService;
     private final CustomOidcUserService customOidcUserService;
+    private final JwtTokenManager jwtTokenManager;
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
@@ -51,7 +53,7 @@ public class SecurityConfig {
                         .oidcUserService(customOidcUserService)));
         http.logout(logout -> logout
                 .logoutSuccessHandler(oAuth2LogoutHandler::logout));
-        http.addFilterBefore(new JwtAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class);
+        http.addFilterBefore(new JwtAuthenticationFilter(jwtTokenManager), UsernamePasswordAuthenticationFilter.class);
         // Deactivate security session storage because we use JWT in this version
         http.sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
         // Allow the user can access to the h2 console. Both below code is essential

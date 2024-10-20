@@ -1,7 +1,7 @@
 package com.example.loginback.security;
 
 import com.example.loginback.security.jwt.JwtCookieProvider;
-import com.example.loginback.security.jwt.JwtTokenProvider;
+import com.example.loginback.security.jwt.JwtTokenManager;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -17,13 +17,13 @@ import java.io.IOException;
 @RequiredArgsConstructor
 public class OAuth2LoginSuccessHandler implements AuthenticationSuccessHandler {
 
-    private final JwtTokenProvider jwtTokenProvider;
+    private final JwtTokenManager jwtTokenManager;
     private final JwtCookieProvider jwtCookieProvider;
 
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException {
         OAuth2AuthenticationToken oauthToken = (OAuth2AuthenticationToken) authentication;
-        String token = jwtTokenProvider.generateToken(oauthToken);
+        String token = jwtTokenManager.generateJwtToken(oauthToken);
         Cookie jwtCookie = jwtCookieProvider.createLoginCookie(token);
         response.addCookie(jwtCookie);
         response.sendRedirect("http://localhost:3000");
