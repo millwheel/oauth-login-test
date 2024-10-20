@@ -23,6 +23,5 @@ public class CustomAuthorityMapper implements GrantedAuthoritiesMapper {
 
         return set;
     }
-
-
+    
 }

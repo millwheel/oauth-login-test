@@ -7,17 +7,18 @@ import java.util.Map;
 public class KakaoUser extends OAuth2ProviderUser {
 
     public KakaoUser(OAuth2User oAuth2User, String registrationId) {
-        super((Map<String, Object>) oAuth2User.getAttributes().get("kakao_account"), oAuth2User, registrationId);
+        super(oAuth2User.getAttributes(), oAuth2User, registrationId);
     }
 
     @Override
     public String getPid() {
-        return "";
+        return getAttributes().get("id").toString();
     }
 
     @Override
     public String getName() {
-        Map<String, Object> profile = (Map) getAttributes().get("profile");
+        Map<String, Object> kakaoAccount = (Map<String, Object>) getAttributes().get("kakao_account");
+        Map<String, Object> profile = (Map) kakaoAccount.get("profile");
         return (String) profile.get("nickname");
     }
 

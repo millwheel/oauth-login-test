@@ -65,6 +65,7 @@ public class SecurityConfig {
         return new DefaultAuthorizationCodeTokenResponseClient();
     }
 
+    // This is essential bean to see the user information
     @Bean
     public GrantedAuthoritiesMapper customAuthoritiesMapper() {
         return new CustomAuthorityMapper();

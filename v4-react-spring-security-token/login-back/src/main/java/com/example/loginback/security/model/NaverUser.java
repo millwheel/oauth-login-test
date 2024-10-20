@@ -12,7 +12,7 @@ public class NaverUser extends OAuth2ProviderUser {
 
     @Override
     public String getPid() {
-        return "";
+        return (String) getAttributes().get("id");
     }
 
     @Override

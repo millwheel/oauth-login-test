@@ -21,7 +21,7 @@ public class JwtTokenManager {
     private final JwtParser jwtParser = Jwts.parserBuilder().setSigningKey(JwtSecret.SECRET_KEY).build();
     private static final long EXPIRATION_TIME = 5 * 60 * 1000;
 
-    public String generateJwtToken(ProviderUser providerUser, String registrationId, List<String> authorities) {
+    public String generateJwtToken(ProviderUser providerUser, String registrationId) {
         String sub = providerUser.getSub();
         String email = providerUser.getEmail();
         String name = providerUser.getName();
@@ -31,7 +31,7 @@ public class JwtTokenManager {
                 .claim("email", email)
                 .claim("name", name)
                 .claim("o2p", registrationId)
-                .claim("authorities", authorities)
+                .claim("authorities", providerUser.getAuthorities())
                 .setIssuedAt(new Date())
                 .setExpiration(new Date(System.currentTimeMillis() + EXPIRATION_TIME))
                 .signWith(JwtSecret.SECRET_KEY)

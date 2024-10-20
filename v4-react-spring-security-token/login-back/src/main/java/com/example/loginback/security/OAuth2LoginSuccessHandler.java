@@ -30,10 +30,9 @@ public class OAuth2LoginSuccessHandler implements AuthenticationSuccessHandler {
         OAuth2AuthenticationToken oauthToken = (OAuth2AuthenticationToken) authentication;
         OAuth2User oAuth2User = oauthToken.getPrincipal();
         String registrationId = oauthToken.getAuthorizedClientRegistrationId();
-        List<String> authorities = oauthToken.getAuthorities().stream().map(GrantedAuthority::getAuthority).toList();
         ProviderUser providerUser = oAuth2UserConverter.constructProviderUserFromOAuth2User(registrationId, oAuth2User);
         oAuth2UserConverter.register(providerUser);
-        String token = jwtTokenManager.generateJwtToken(providerUser, registrationId, authorities);
+        String token = jwtTokenManager.generateJwtToken(providerUser, registrationId);
         Cookie jwtCookie = jwtCookieProvider.createLoginCookie(token);
         response.addCookie(jwtCookie);
         response.sendRedirect("http://localhost:3000");
