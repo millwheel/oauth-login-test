@@ -1,5 +1,6 @@
 package com.example.loginback.security.jwt;
 
+import com.example.loginback.security.model.ProviderUser;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.JwtParser;
 import io.jsonwebtoken.Jwts;
@@ -11,10 +12,7 @@ import org.springframework.security.oauth2.core.oidc.user.DefaultOidcUser;
 import org.springframework.stereotype.Component;
 
 import java.time.Instant;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Component
@@ -23,29 +21,15 @@ public class JwtTokenManager {
     private final JwtParser jwtParser = Jwts.parserBuilder().setSigningKey(JwtSecret.SECRET_KEY).build();
     private static final long EXPIRATION_TIME = 5 * 60 * 1000;
 
-    public String generateJwtToken(OAuth2AuthenticationToken oAuth2AuthenticationToken) {
-        String userId = oAuth2AuthenticationToken.getPrincipal().getName();
-        Map<String, Object> attributes = oAuth2AuthenticationToken.getPrincipal().getAttributes();
-        String registrationId = oAuth2AuthenticationToken.getAuthorizedClientRegistrationId();
-        List<String> authorities = oAuth2AuthenticationToken.getAuthorities().stream()
-                .map(GrantedAuthority::getAuthority)
-                .toList();
-
-        String iss = attributes.get("iss").toString();
-        String email = (String) attributes.get("email");
-        Boolean emailVerified = (Boolean) attributes.get("email_verified");
-        String name = (String) attributes.get("name");
-        String givenName = (String) attributes.get("given_name");
-        String familyName = (String) attributes.get("family_name");
+    public String generateJwtToken(ProviderUser providerUser, String registrationId, List<String> authorities) {
+        String userId = providerUser.getId();
+        String username = providerUser.getUsername();
+        String name = providerUser.getName();
 
         return Jwts.builder()
                 .setSubject(userId)
-                .claim("iss", iss)
-                .claim("email", email)
-                .claim("email_verified", emailVerified)
+                .claim("email", username)
                 .claim("name", name)
-                .claim("given_name", givenName)
-                .claim("family_name", familyName)
                 .claim("o2p", registrationId)
                 .claim("authorities", authorities)
                 .setIssuedAt(new Date())

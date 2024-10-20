@@ -89,12 +89,4 @@ public class SecurityConfig {
         return source;
     }
 
-    private Cookie createJwtCookie(String token) {
-        Cookie jwtCookie = new Cookie("JWT", token);
-        jwtCookie.setHttpOnly(true); // Block the JS approach to Cookie
-        jwtCookie.setMaxAge(2 * 60 * 60); // 2 Hours valid Cookie
-        jwtCookie.setPath("/"); // Open for all path in domain
-        return jwtCookie;
-    }
-
 }
