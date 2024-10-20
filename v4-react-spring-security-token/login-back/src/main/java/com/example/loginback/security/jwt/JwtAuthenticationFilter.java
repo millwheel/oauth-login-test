@@ -1,6 +1,5 @@
 package com.example.loginback.security.jwt;
 
-import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.JwtParser;
 import io.jsonwebtoken.Jwts;
 import jakarta.servlet.FilterChain;
@@ -8,18 +7,14 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.oauth2.client.authentication.OAuth2AuthenticationToken;
-import org.springframework.security.oauth2.core.oidc.OidcIdToken;
-import org.springframework.security.oauth2.core.oidc.user.DefaultOidcUser;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
-import java.util.*;
-import java.util.stream.Collectors;
+
+import static com.example.loginback.security.jwt.JwtCookieName.JWT_COOKIE_NAME;
 
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
@@ -47,7 +42,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     private String getTokenFromCookies(Cookie[] cookies) {
         if (cookies != null) {
             for (Cookie cookie : cookies) {
-                if (JwtCookieName.JWT.name().equals(cookie.getName())) {
+                if (JWT_COOKIE_NAME.equals(cookie.getName())) {
                     return cookie.getValue();
                 }
             }

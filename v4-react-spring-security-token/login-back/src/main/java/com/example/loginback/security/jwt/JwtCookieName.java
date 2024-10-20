@@ -1,6 +1,7 @@
 package com.example.loginback.security.jwt;
 
-public enum JwtCookieName {
+public class JwtCookieName {
 
-    JWT
+    public static String JWT_COOKIE_NAME = "LOGIN_TEST_JWT";
+
 }
