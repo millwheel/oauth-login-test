@@ -34,9 +34,6 @@ const MyPage = () => {
               <strong>ID:</strong> {userData.id}
             </li>
             <li>
-              <strong>Username:</strong> {userData.username}
-            </li>
-            <li>
               <strong>Provider:</strong> {userData.provider}
             </li>
             <li>
