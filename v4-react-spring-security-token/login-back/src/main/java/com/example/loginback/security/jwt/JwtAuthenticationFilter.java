@@ -24,16 +24,16 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
         String token = getTokenFromCookies(request.getCookies());
         // TODO OAuth2AuthenticationToken 재구성 로직 필요
-        if (token != null) {
-            Claims claims = jwtParser
-                    .parseClaimsJws(token)
-                    .getBody();
-            String userId = claims.getSubject();
-            UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(userId, null, null);
-
-            authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
-            SecurityContextHolder.getContext().setAuthentication(authentication);
-        }
+//        if (token != null) {
+//            Claims claims = jwtParser
+//                    .parseClaimsJws(token)
+//                    .getBody();
+//            String userId = claims.getSubject();
+//            UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(userId, null, null);
+//
+//            authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
+//            SecurityContextHolder.getContext().setAuthentication(authentication);
+//        }
         filterChain.doFilter(request, response);
     }
 
