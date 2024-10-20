@@ -25,7 +25,6 @@ import java.util.Map;
 @RequiredArgsConstructor
 public class UserController {
 
-    private final OAuth2UserConverter oAuth2UserConverter;
     private final UserService userService;
 
     @GetMapping("/oauth")

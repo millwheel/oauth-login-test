@@ -1,7 +1,6 @@
 package com.example.loginback.security.model;
 
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import com.example.loginback.security.AuthorityFormatter;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 
 import java.util.List;
@@ -10,24 +9,32 @@ import java.util.UUID;
 
 public abstract class OAuth2ProviderUser implements ProviderUser {
 
-    private Map<String, Object> attributes;
-    private OAuth2User oAuth2User;
     private String registrationId;
+    private Map<String, Object> attributes;
+    private String sub;
+    private String email;
+    private String name;
+    private List<String> authorities;
 
     public OAuth2ProviderUser(Map<String, Object> attributes, OAuth2User oAuth2User, String registrationId) {
-        this.attributes = attributes;
-        this.oAuth2User = oAuth2User;
         this.registrationId = registrationId;
+        this.attributes = attributes;
+        this.sub = UUID.randomUUID().toString();
+        this.email = attributes.get("email") != null ? attributes.get("email").toString() : null;
+        this.name = attributes.get("name") != null ? attributes.get("name").toString() : null;
+        this.authorities = oAuth2User.getAuthorities().stream()
+                .map(authority -> AuthorityFormatter.trimAuthorityString(authority.getAuthority()))
+                .toList();
     }
 
     @Override
-    public String getPassword() {
-        return UUID.randomUUID().toString();
+    public String getSub(){
+        return sub;
     }
 
     @Override
     public String getEmail() {
-        return (String) getAttributes().get("email");
+        return email;
     }
 
     @Override
@@ -36,10 +43,8 @@ public abstract class OAuth2ProviderUser implements ProviderUser {
     }
 
     @Override
-    public List<? extends GrantedAuthority> getAuthorities() {
-        return oAuth2User.getAuthorities().stream()
-                .map(authority -> new SimpleGrantedAuthority(authority.getAuthority()))
-                .toList();
+    public List<String> getAuthorities() {
+        return authorities;
     }
 
     @Override
@@ -47,7 +52,4 @@ public abstract class OAuth2ProviderUser implements ProviderUser {
         return attributes;
     }
 
-    public OAuth2User getOAuth2User() {
-        return oAuth2User;
-    }
 }

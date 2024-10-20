@@ -10,16 +10,9 @@ public class KakaoUser extends OAuth2ProviderUser {
         super((Map<String, Object>) oAuth2User.getAttributes().get("kakao_account"), oAuth2User, registrationId);
     }
 
-
     @Override
-    public String getId() {
-        return getOAuth2User().getAttributes().get("id").toString();
-    }
-
-    // TODO Enroll the biz app in Kakao Developer to activate the email information from kakao
-    @Override
-    public String getUsername() {
-        return "sample email";
+    public String getPid() {
+        return "";
     }
 
     @Override

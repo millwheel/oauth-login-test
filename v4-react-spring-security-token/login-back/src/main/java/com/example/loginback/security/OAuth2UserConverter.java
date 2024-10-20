@@ -33,7 +33,7 @@ public class OAuth2UserConverter {
     }
 
     public void register(ProviderUser providerUser) {
-        if (!userService.isExist(providerUser.getId())){
+        if (!userService.isExist(providerUser.getPid(), providerUser.getProvider())){
             userService.AddUser(providerUser);
         }
     }

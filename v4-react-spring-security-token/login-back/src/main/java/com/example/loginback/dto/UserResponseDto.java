@@ -9,7 +9,6 @@ import java.util.List;
 public class UserResponseDto {
 
     private Long id;
-    private String username;
     private String provider;
     private String email;
     private String name;
@@ -17,7 +16,6 @@ public class UserResponseDto {
 
     public UserResponseDto(User user) {
         this.id = user.getId();
-        this.username = user.getUsername();
         this.provider = user.getProvider();
         this.email = user.getEmail();
         this.name = user.getName();

@@ -13,8 +13,8 @@ public class UserService {
 
     private final UserRepository userRepository;
 
-    public User getUser(String pid){
-        return userRepository.findByPid(pid).orElseThrow(() -> new EntityNotFoundException("User not found"));
+    public User getUser(String sub){
+        return userRepository.findBySub(sub).orElseThrow(() -> new EntityNotFoundException("User not found"));
     }
 
     public void AddUser(ProviderUser providerUser) {
@@ -22,7 +22,7 @@ public class UserService {
         userRepository.save(user);
     }
 
-    public boolean isExist(String pid) {
-        return userRepository.findByPid(pid).isPresent();
+    public boolean isExist(String pid, String provider) {
+        return userRepository.existsByPidAndProvider(pid, provider);
     }
 }

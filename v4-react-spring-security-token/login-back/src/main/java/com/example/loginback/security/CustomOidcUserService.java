@@ -8,10 +8,11 @@ import org.springframework.security.oauth2.client.oidc.userinfo.OidcUserService;
 import org.springframework.security.oauth2.client.userinfo.OAuth2UserService;
 import org.springframework.security.oauth2.core.OAuth2AuthenticationException;
 import org.springframework.security.oauth2.core.oidc.user.OidcUser;
+import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 
+// Don't delete this component because the spring security uses this custom user service to save the user information
 @Slf4j
-@Service
 @RequiredArgsConstructor
 public class CustomOidcUserService implements OAuth2UserService<OidcUserRequest, OidcUser> {
 

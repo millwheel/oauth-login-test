@@ -18,9 +18,8 @@ public class User {
     @Id
     @GeneratedValue
     private Long id;
+    private String sub;
     private String pid;
-    private String username;
-    private String password;
     private String provider;
     private String email;
     private String name;
@@ -30,14 +29,11 @@ public class User {
     private List<String> authorities;
 
     public User(ProviderUser providerUser) {
-        this.pid = providerUser.getId();
-        this.username = providerUser.getUsername();
-        this.password = providerUser.getPassword();
+        this.sub = providerUser.getSub();
+        this.pid = providerUser.getPid();
         this.provider = providerUser.getProvider();
         this.email = providerUser.getEmail();
         this.name = providerUser.getName();
-        this.authorities = providerUser.getAuthorities().stream()
-                .map(authority -> AuthorityFormatter.trimAuthorityString(authority.getAuthority()))
-                .toList();;
+        this.authorities = providerUser.getAuthorities();
     }
 }

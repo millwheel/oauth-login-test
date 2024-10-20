@@ -33,8 +33,6 @@ public class SecurityConfig {
 
     private final OAuth2LoginSuccessHandler oAuth2LoginSuccessHandler;
     private final OAuth2LogoutHandler oAuth2LogoutHandler;
-    private final CustomOAuth2UserService customOAuth2UserService;
-    private final CustomOidcUserService customOidcUserService;
     private final JwtTokenManager jwtTokenManager;
 
     @Bean
@@ -47,10 +45,7 @@ public class SecurityConfig {
                         .baseUri("/oauth2/auth"))
                 .tokenEndpoint(tokenEndpointConfig -> tokenEndpointConfig
                         .accessTokenResponseClient(accessTokenResponseClient()))
-                .successHandler(oAuth2LoginSuccessHandler)
-                .userInfoEndpoint(userInfoEndpointConfig -> userInfoEndpointConfig
-                        .userService(customOAuth2UserService)
-                        .oidcUserService(customOidcUserService)));
+                .successHandler(oAuth2LoginSuccessHandler));
         http.logout(logout -> logout
                 .logoutSuccessHandler(oAuth2LogoutHandler::logout));
         http.addFilterBefore(new JwtAuthenticationFilter(jwtTokenManager), UsernamePasswordAuthenticationFilter.class);

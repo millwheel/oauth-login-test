@@ -7,6 +7,6 @@ import java.util.Optional;
 
 public interface UserRepository extends JpaRepository<User, Long> {
 
-    boolean existsByPid(String pid);
-    Optional<User> findByPid(String pid);
+    boolean existsByPidAndProvider(String pid, String provider);
+    Optional<User> findBySub(String sub);
 }

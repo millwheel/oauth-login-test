@@ -1,7 +1,5 @@
 package com.example.loginback.security.jwt;
 
-import io.jsonwebtoken.JwtParser;
-import io.jsonwebtoken.Jwts;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.Cookie;
@@ -17,8 +15,6 @@ import java.io.IOException;
 import static com.example.loginback.security.jwt.JwtCookieName.JWT_COOKIE_NAME;
 
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
-
-    private final JwtParser jwtParser = Jwts.parserBuilder().setSigningKey(JwtSecret.SECRET_KEY).build();
 
     private JwtTokenManager jwtTokenManager;
 

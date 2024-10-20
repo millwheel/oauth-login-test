@@ -22,13 +22,13 @@ public class JwtTokenManager {
     private static final long EXPIRATION_TIME = 5 * 60 * 1000;
 
     public String generateJwtToken(ProviderUser providerUser, String registrationId, List<String> authorities) {
-        String userId = providerUser.getId();
-        String username = providerUser.getUsername();
+        String sub = providerUser.getSub();
+        String email = providerUser.getEmail();
         String name = providerUser.getName();
 
         return Jwts.builder()
-                .setSubject(userId)
-                .claim("email", username)
+                .setSubject(sub)
+                .claim("email", email)
                 .claim("name", name)
                 .claim("o2p", registrationId)
                 .claim("authorities", authorities)
