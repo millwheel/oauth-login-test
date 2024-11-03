@@ -115,13 +115,13 @@ class LoginOptionsScreen extends StatelessWidget {
               imagePath: 'assets/google_icon.png',
               onPressed: () => _loginWithProvider("Google"),
             ),
-            const SizedBox(height: 30),
+            const SizedBox(height: 40),
             LoginElevatedButton(
               text: "Login with Naver",
               imagePath: 'assets/naver_icon.png',
               onPressed: () => _loginWithProvider("Naver"),
             ),
-            const SizedBox(height: 30),
+            const SizedBox(height: 40),
             LoginElevatedButton(
               text: "Login with Kakao",
               imagePath: 'assets/kakao_icon.png',
@@ -147,27 +147,30 @@ class LoginElevatedButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ElevatedButton(
-      onPressed: onPressed,
-      style: ElevatedButton.styleFrom(
-        padding: EdgeInsets.symmetric(vertical: 16.0, horizontal: 38.0),
-      ),
-      child: Row(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Image.asset(
-            imagePath,
-            width: 26,
-            height: 26,
-          ),
-          SizedBox(
-            width: 20,
-          ),
-          Text(
-            text,
-            style: TextStyle(fontSize: 24, color: Colors.black),
-          ),
-        ],
+    return SizedBox(
+      width: 350,
+      child: ElevatedButton(
+        onPressed: onPressed,
+        style: ElevatedButton.styleFrom(
+          padding: EdgeInsets.symmetric(vertical: 20.0, horizontal: 38.0),
+        ),
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Image.asset(
+              imagePath,
+              width: 26,
+              height: 26,
+            ),
+            SizedBox(
+              width: 20,
+            ),
+            Text(
+              text,
+              style: TextStyle(fontSize: 24, color: Colors.black),
+            ),
+          ],
+        ),
       ),
     );
   }
