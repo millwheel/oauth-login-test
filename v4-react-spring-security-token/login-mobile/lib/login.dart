@@ -1,13 +1,18 @@
 import 'package:flutter/material.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class LoginOptionsScreen extends StatelessWidget {
   const LoginOptionsScreen({super.key});
 
   final serverBaseUrl = "http://10.0.2.2:8080";
 
-  void _loginWithProvider(String provider) {
-    // 로그인 로직을 여기에 추가하세요.
-    print("Login with $provider");
+  Future<void> _loginWithProvider(String provider) async {
+    final url = Uri.parse('$serverBaseUrl/oauth2/auth/$provider');
+    try {
+      await launchUrl(url, mode: LaunchMode.inAppBrowserView);
+    } catch (e) {
+      print("Could not launch $url");
+    }
   }
 
   @override
