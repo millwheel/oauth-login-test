@@ -1,6 +1,6 @@
 package com.example.loginback.security;
 
-import com.example.loginback.security.jwt.JwtCookieProvider;
+import com.example.loginback.security.jwt.JwtCookieManager;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -13,11 +13,11 @@ import org.springframework.stereotype.Component;
 @RequiredArgsConstructor
 public class OAuth2LogoutHandler implements LogoutHandler {
 
-    private final JwtCookieProvider jwtCookieProvider;
+    private final JwtCookieManager jwtCookieManager;
 
     @Override
     public void logout(HttpServletRequest request, HttpServletResponse response, Authentication authentication) {
-        Cookie jwtCookie = jwtCookieProvider.createLogoutCookie();
+        Cookie jwtCookie = jwtCookieManager.createLogoutCookie();
         response.addCookie(jwtCookie);
         response.setStatus(HttpServletResponse.SC_OK);
     }
