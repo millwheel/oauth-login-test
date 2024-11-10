@@ -1,6 +1,6 @@
 package com.example.loginback.security;
 
-import com.example.loginback.security.jwt.JwtCookieManager;
+import com.example.loginback.security.jwt.JwtCookieCreator;
 import com.example.loginback.security.jwt.JwtGenerator;
 import com.example.loginback.security.model.ProviderUser;
 import jakarta.servlet.http.Cookie;
@@ -25,7 +25,7 @@ import java.util.stream.Collectors;
 public class OAuth2LoginSuccessHandler implements AuthenticationSuccessHandler {
 
     private final JwtGenerator jwtGenerator;
-    private final JwtCookieManager jwtCookieManager;
+    private final JwtCookieCreator jwtCookieCreator;
     private final OAuth2UserConverter oAuth2UserConverter;
 
     @Override
@@ -49,7 +49,7 @@ public class OAuth2LoginSuccessHandler implements AuthenticationSuccessHandler {
             landingUri = params.get("landing_uri");
         }
         if (landingUri != null) {
-            Cookie jwtCookie = jwtCookieManager.createLoginCookie(token);
+            Cookie jwtCookie = jwtCookieCreator.createLoginCookie(token);
             response.addCookie(jwtCookie);
             response.sendRedirect(URLDecoder.decode(landingUri, StandardCharsets.UTF_8));
         } else {

@@ -18,11 +18,11 @@ import java.io.IOException;
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
     private final JwtValidator jwtValidator;
-    private final JwtCookieManager jwtCookieManager;
+    private final JwtCookieExtractor jwtCookieExtractor;
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
-        String token = jwtCookieManager.getTokenFromCookies(request.getCookies());
+        String token = jwtCookieExtractor.getTokenFromCookies(request.getCookies());
 
         if (token != null && jwtValidator.validateJwtToken(token)) {
             OAuth2AuthenticationToken authentication = jwtValidator.getAuthenticationFromJwtToken(token);

@@ -6,7 +6,7 @@ import org.springframework.stereotype.Component;
 import static com.example.loginback.security.jwt.constant.JwtCookieName.JWT_COOKIE_NAME;
 
 @Component
-public class JwtCookieManager {
+public class JwtCookieCreator {
 
     public Cookie createLoginCookie(String token) {
         Cookie jwtCookie = new Cookie(JWT_COOKIE_NAME, token);
@@ -22,17 +22,6 @@ public class JwtCookieManager {
         jwtCookie.setMaxAge(0);
         jwtCookie.setPath("/");
         return jwtCookie;
-    }
-
-    public String getTokenFromCookies(Cookie[] cookies) {
-        if (cookies != null) {
-            for (Cookie cookie : cookies) {
-                if (JWT_COOKIE_NAME.equals(cookie.getName())) {
-                    return cookie.getValue();
-                }
-            }
-        }
-        return null;
     }
 
 }
