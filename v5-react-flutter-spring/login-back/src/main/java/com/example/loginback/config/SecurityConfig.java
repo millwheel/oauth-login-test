@@ -45,6 +45,7 @@ public class SecurityConfig {
                 .successHandler(oAuth2LoginSuccessHandler));
         http.logout(logout -> logout
                 .logoutSuccessHandler(oAuth2LogoutHandler::logout));
+        // Filter to create Authentication for the request that has JWT
         http.addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
         // Deactivate security session storage because we use JWT in this version
         http.sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS));

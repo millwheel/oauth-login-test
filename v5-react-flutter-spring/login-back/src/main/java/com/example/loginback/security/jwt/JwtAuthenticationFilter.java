@@ -18,11 +18,10 @@ import java.io.IOException;
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
     private final JwtValidator jwtValidator;
-    private final JwtCookieExtractor jwtCookieExtractor;
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
-        String token = jwtCookieExtractor.getTokenFromCookies(request.getCookies());
+        String token = getTokenFromHeader(request);
 
         if (token != null && jwtValidator.validateJwtToken(token)) {
             OAuth2AuthenticationToken authentication = jwtValidator.getAuthenticationFromJwtToken(token);
@@ -31,6 +30,14 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         }
 
         filterChain.doFilter(request, response);
+    }
+
+    private String getTokenFromHeader(HttpServletRequest request) {
+        String bearerToken = request.getHeader("Authorization");
+        if (bearerToken != null && bearerToken.startsWith("Bearer ")) {
+            return bearerToken.substring(7);
+        }
+        return null;
     }
 
 }
