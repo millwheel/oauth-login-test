@@ -17,15 +17,15 @@ import java.io.IOException;
 @RequiredArgsConstructor
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
-    private final JwtTokenManager jwtTokenManager;
+    private final JwtValidator jwtValidator;
     private final JwtCookieManager jwtCookieManager;
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
         String token = jwtCookieManager.getTokenFromCookies(request.getCookies());
 
-        if (token != null && jwtTokenManager.validateJwtToken(token)) {
-            OAuth2AuthenticationToken authentication = jwtTokenManager.getAuthenticationFromJwtToken(token);
+        if (token != null && jwtValidator.validateJwtToken(token)) {
+            OAuth2AuthenticationToken authentication = jwtValidator.getAuthenticationFromJwtToken(token);
             authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
             SecurityContextHolder.getContext().setAuthentication(authentication);
         }

@@ -1,7 +1,7 @@
 package com.example.loginback.security;
 
 import com.example.loginback.security.jwt.JwtCookieManager;
-import com.example.loginback.security.jwt.JwtTokenManager;
+import com.example.loginback.security.jwt.JwtGenerator;
 import com.example.loginback.security.model.ProviderUser;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
@@ -24,7 +24,7 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class OAuth2LoginSuccessHandler implements AuthenticationSuccessHandler {
 
-    private final JwtTokenManager jwtTokenManager;
+    private final JwtGenerator jwtGenerator;
     private final JwtCookieManager jwtCookieManager;
     private final OAuth2UserConverter oAuth2UserConverter;
 
@@ -35,7 +35,7 @@ public class OAuth2LoginSuccessHandler implements AuthenticationSuccessHandler {
         String registrationId = oauthToken.getAuthorizedClientRegistrationId();
         ProviderUser providerUser = oAuth2UserConverter.constructProviderUserFromOAuth2User(registrationId, oAuth2User);
         oAuth2UserConverter.register(providerUser);
-        String token = jwtTokenManager.generateJwtToken(providerUser, registrationId);
+        String token = jwtGenerator.generateToken(providerUser, registrationId);
         String state = request.getParameter("state");
         String landingUri = null;
         if (state != null) {
