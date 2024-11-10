@@ -16,6 +16,8 @@ import org.springframework.security.core.authority.mapping.GrantedAuthoritiesMap
 import org.springframework.security.oauth2.client.endpoint.DefaultAuthorizationCodeTokenResponseClient;
 import org.springframework.security.oauth2.client.endpoint.OAuth2AccessTokenResponseClient;
 import org.springframework.security.oauth2.client.endpoint.OAuth2AuthorizationCodeGrantRequest;
+import org.springframework.security.oauth2.client.registration.ClientRegistrationRepository;
+import org.springframework.security.oauth2.client.web.OAuth2AuthorizationRequestResolver;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.cors.CorsConfiguration;
@@ -34,6 +36,7 @@ public class SecurityConfig {
     private final OAuth2LoginSuccessHandler oAuth2LoginSuccessHandler;
     private final OAuth2LogoutHandler oAuth2LogoutHandler;
     private final JwtTokenManager jwtTokenManager;
+    private final ClientRegistrationRepository clientRegistrationRepository;
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
@@ -42,9 +45,8 @@ public class SecurityConfig {
                 .anyRequest().authenticated());
         http.oauth2Login(oAuth2LoginConfigurer -> oAuth2LoginConfigurer
                 .authorizationEndpoint(authorization -> authorization
-                        .baseUri("/oauth2/auth"))
-                .tokenEndpoint(tokenEndpointConfig -> tokenEndpointConfig
-                        .accessTokenResponseClient(accessTokenResponseClient()))
+                        .authorizationRequestResolver(customAuthorizationRequestResolver())
+                )
                 .successHandler(oAuth2LoginSuccessHandler));
         http.logout(logout -> logout
                 .logoutSuccessHandler(oAuth2LogoutHandler::logout));
@@ -59,10 +61,10 @@ public class SecurityConfig {
         return http.build();
     }
 
-
+    // This is essential to maintain redirection endpoint for client
     @Bean
-    public OAuth2AccessTokenResponseClient<OAuth2AuthorizationCodeGrantRequest> accessTokenResponseClient() {
-        return new DefaultAuthorizationCodeTokenResponseClient();
+    public OAuth2AuthorizationRequestResolver customAuthorizationRequestResolver() {
+        return new LandingUriOAuth2AuthorizationRequestResolver(clientRegistrationRepository);
     }
 
     // This is essential bean to see the user information
