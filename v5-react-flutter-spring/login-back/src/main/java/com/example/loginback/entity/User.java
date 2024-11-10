@@ -1,6 +1,5 @@
 package com.example.loginback.entity;
 
-import com.example.loginback.security.AuthorityFormatter;
 import com.example.loginback.security.model.ProviderUser;
 import jakarta.persistence.*;
 import lombok.AccessLevel;

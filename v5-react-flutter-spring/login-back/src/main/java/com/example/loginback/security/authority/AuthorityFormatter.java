@@ -1,4 +1,4 @@
-package com.example.loginback.security;
+package com.example.loginback.security.authority;
 
 
 public class AuthorityFormatter {

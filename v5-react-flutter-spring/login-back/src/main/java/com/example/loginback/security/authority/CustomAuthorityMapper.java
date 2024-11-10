@@ -1,4 +1,4 @@
-package com.example.loginback.security;
+package com.example.loginback.security.authority;
 
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -8,7 +8,7 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 
-import static com.example.loginback.security.AuthorityFormatter.trimAuthorityString;
+import static com.example.loginback.security.authority.AuthorityFormatter.trimAuthorityString;
 
 public class CustomAuthorityMapper implements GrantedAuthoritiesMapper {
 

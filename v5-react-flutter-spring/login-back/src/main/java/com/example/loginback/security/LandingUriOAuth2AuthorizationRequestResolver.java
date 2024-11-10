@@ -9,6 +9,7 @@ import org.springframework.security.oauth2.core.endpoint.OAuth2AuthorizationRequ
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 
+// NOTE: Extract landing uri from client request to callback after authentication
 public class LandingUriOAuth2AuthorizationRequestResolver implements OAuth2AuthorizationRequestResolver {
 
     private final OAuth2AuthorizationRequestResolver defaultResolver;

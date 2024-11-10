@@ -3,7 +3,7 @@ package com.example.loginback.security.jwt;
 import jakarta.servlet.http.Cookie;
 import org.springframework.stereotype.Component;
 
-import static com.example.loginback.security.jwt.JwtCookieName.JWT_COOKIE_NAME;
+import static com.example.loginback.security.jwt.constant.JwtCookieName.JWT_COOKIE_NAME;
 
 @Component
 public class JwtCookieManager {

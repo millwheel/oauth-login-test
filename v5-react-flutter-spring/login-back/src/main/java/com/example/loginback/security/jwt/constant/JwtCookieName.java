@@ -1,4 +1,4 @@
-package com.example.loginback.security.jwt;
+package com.example.loginback.security.jwt.constant;
 
 public class JwtCookieName {
 

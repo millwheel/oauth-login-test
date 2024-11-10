@@ -1,6 +1,6 @@
 package com.example.loginback.security.model;
 
-import com.example.loginback.security.AuthorityFormatter;
+import com.example.loginback.security.authority.AuthorityFormatter;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 
 import java.util.List;

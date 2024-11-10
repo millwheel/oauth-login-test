@@ -1,5 +1,6 @@
 package com.example.loginback.security.jwt;
 
+import com.example.loginback.security.jwt.constant.JwtSecret;
 import com.example.loginback.security.model.ProviderUser;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.JwtParser;
@@ -18,7 +19,7 @@ import java.util.stream.Collectors;
 @Component
 public class JwtTokenManager {
 
-    private final JwtParser jwtParser = Jwts.parserBuilder().setSigningKey(JwtSecret.getSecretKey()).build();
+    private final JwtParser jwtParser = Jwts.parserBuilder().setSigningKey(JwtSecret.SECRET_KEY).build();
     private static final long EXPIRATION_TIME = 5 * 60 * 1000;
 
     public String generateJwtToken(ProviderUser providerUser, String registrationId) {
@@ -34,7 +35,7 @@ public class JwtTokenManager {
                 .claim("authorities", providerUser.getAuthorities())
                 .setIssuedAt(new Date())
                 .setExpiration(new Date(System.currentTimeMillis() + EXPIRATION_TIME))
-                .signWith(JwtSecret.getSecretKey())
+                .signWith(JwtSecret.SECRET_KEY)
                 .compact();
     }
 
