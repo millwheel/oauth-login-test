@@ -20,22 +20,24 @@ public class LandingUriOAuth2AuthorizationRequestResolver implements OAuth2Autho
     @Override
     public OAuth2AuthorizationRequest resolve(HttpServletRequest request) {
         OAuth2AuthorizationRequest authorizationRequest = defaultResolver.resolve(request);
-        return modifyAuthorizationRequest(authorizationRequest, request);
+        return putLandingUriToAuthorizationRequestState(authorizationRequest, request);
     }
 
     @Override
     public OAuth2AuthorizationRequest resolve(HttpServletRequest request, String clientRegistrationId) {
         OAuth2AuthorizationRequest authorizationRequest = defaultResolver.resolve(request, clientRegistrationId);
-        return modifyAuthorizationRequest(authorizationRequest, request);
+        return putLandingUriToAuthorizationRequestState(authorizationRequest, request);
     }
 
-    private OAuth2AuthorizationRequest modifyAuthorizationRequest(OAuth2AuthorizationRequest authorizationRequest, HttpServletRequest request) {
+    private OAuth2AuthorizationRequest putLandingUriToAuthorizationRequestState(OAuth2AuthorizationRequest authorizationRequest, HttpServletRequest request) {
         if (authorizationRequest != null) {
             String landingUri = request.getParameter("landing_uri");
-            String state = authorizationRequest.getState() + "&landing_uri=" + URLEncoder.encode(landingUri, StandardCharsets.UTF_8);
-            return OAuth2AuthorizationRequest.from(authorizationRequest)
-                    .state(state)
-                    .build();
+            if (landingUri != null) {
+                String state = authorizationRequest.getState() + "&landing_uri=" + URLEncoder.encode(landingUri, StandardCharsets.UTF_8);
+                return OAuth2AuthorizationRequest.from(authorizationRequest)
+                        .state(state)
+                        .build();
+            }
         }
         return null;
     }
