@@ -12,6 +12,7 @@ import org.springframework.security.config.annotation.web.configurers.HeadersCon
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.authority.mapping.GrantedAuthoritiesMapper;
 import org.springframework.security.oauth2.client.registration.ClientRegistrationRepository;
+import org.springframework.security.oauth2.client.web.DefaultOAuth2AuthorizationRequestResolver;
 import org.springframework.security.oauth2.client.web.OAuth2AuthorizationRequestResolver;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
@@ -24,24 +25,20 @@ import java.util.List;
 
 @Configuration
 @EnableMethodSecurity
-// We should Add this method security annotation to use 'PreAuthorize' annotation in controller
+// We should Add above method security annotation to use 'PreAuthorize' annotation in controller
 @RequiredArgsConstructor
 public class SecurityConfig {
 
     private final OAuth2LoginSuccessHandler oAuth2LoginSuccessHandler;
     private final OAuth2LogoutHandler oAuth2LogoutHandler;
     private final JwtAuthenticationFilter jwtAuthenticationFilter;
-    private final ClientRegistrationRepository clientRegistrationRepository;
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http.authorizeHttpRequests(auth -> auth
-                .requestMatchers("/", "/auth", "/login", "/h2-console/**", "/error/**").permitAll()
+                .requestMatchers("/", "/auth/**", "/login", "/h2-console/**", "/error/**").permitAll()
                 .anyRequest().authenticated());
         http.oauth2Login(oAuth2LoginConfigurer -> oAuth2LoginConfigurer
-                .authorizationEndpoint(authorization -> authorization
-                        .authorizationRequestResolver(customAuthorizationRequestResolver())
-                )
                 .successHandler(oAuth2LoginSuccessHandler));
         http.logout(logout -> logout
                 .logoutSuccessHandler(oAuth2LogoutHandler::logout));
@@ -57,10 +54,9 @@ public class SecurityConfig {
         return http.build();
     }
 
-    // This is essential to maintain redirection endpoint for client
     @Bean
-    public OAuth2AuthorizationRequestResolver customAuthorizationRequestResolver() {
-        return new LandingUriOAuth2AuthorizationRequestResolver(clientRegistrationRepository);
+    public OAuth2AuthorizationRequestResolver customAuthorizationRequestResolver(ClientRegistrationRepository clientRegistrationRepository) {
+        return new DefaultOAuth2AuthorizationRequestResolver(clientRegistrationRepository, "/oauth2/auth");
     }
 
     // This is essential bean to see the user information

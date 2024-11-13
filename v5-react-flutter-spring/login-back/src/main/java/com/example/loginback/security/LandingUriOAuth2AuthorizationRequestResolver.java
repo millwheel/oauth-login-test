@@ -39,6 +39,7 @@ public class LandingUriOAuth2AuthorizationRequestResolver implements OAuth2Autho
                         .state(state)
                         .build();
             }
+            return authorizationRequest;
         }
         return null;
     }

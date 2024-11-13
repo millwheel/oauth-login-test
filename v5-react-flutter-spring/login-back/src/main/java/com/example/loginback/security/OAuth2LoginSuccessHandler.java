@@ -1,9 +1,7 @@
 package com.example.loginback.security;
 
-import com.example.loginback.security.jwt.JwtCookieCreator;
 import com.example.loginback.security.jwt.JwtGenerator;
 import com.example.loginback.security.model.ProviderUser;
-import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
@@ -14,18 +12,12 @@ import org.springframework.security.web.authentication.AuthenticationSuccessHand
 import org.springframework.stereotype.Component;
 
 import java.io.IOException;
-import java.net.URLDecoder;
-import java.nio.charset.StandardCharsets;
-import java.util.Arrays;
-import java.util.Map;
-import java.util.stream.Collectors;
 
 @Component
 @RequiredArgsConstructor
 public class OAuth2LoginSuccessHandler implements AuthenticationSuccessHandler {
 
     private final JwtGenerator jwtGenerator;
-    private final JwtCookieCreator jwtCookieCreator;
     private final OAuth2UserConverter oAuth2UserConverter;
 
     @Override
@@ -36,27 +28,10 @@ public class OAuth2LoginSuccessHandler implements AuthenticationSuccessHandler {
         ProviderUser providerUser = oAuth2UserConverter.constructProviderUserFromOAuth2User(registrationId, oAuth2User);
         oAuth2UserConverter.register(providerUser);
         String token = jwtGenerator.generateToken(providerUser, registrationId);
-        String state = request.getParameter("state");
-        String landingUri = null;
-        if (state != null) {
-            Map<String, String> params = Arrays.stream(state.split("&"))
-                    .map(param -> param.split("="))
-                    .filter(entry -> entry.length == 2)
-                    .collect(Collectors.toMap(
-                            entry -> entry[0],
-                            entry -> URLDecoder.decode(entry[1], StandardCharsets.UTF_8)
-                    ));
-            landingUri = params.get("landing_uri");
-        }
-        if (landingUri != null) {
-            Cookie jwtCookie = jwtCookieCreator.createLoginCookie(token);
-            response.addCookie(jwtCookie);
-            response.sendRedirect(URLDecoder.decode(landingUri, StandardCharsets.UTF_8));
-        } else {
-            response.setContentType("application/json");
-            response.getWriter().write("{\"token\":\"" + token + "\"}");
-            response.getWriter().flush();
-        }
+
+        response.setContentType("application/json");
+        response.getWriter().write("{\"jwt\":\"" + token + "\"}");
+        response.getWriter().flush();
     }
 
 }
